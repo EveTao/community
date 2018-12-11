@@ -12,8 +12,6 @@
     <%@ page contentType="text/html;charset=UTF-8" language="java" %>
     <script src="${pageContext.request.contextPath}/res/jquery-3.3.1.js"></script>
     <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/res/layui/css/layui.css" media="all">
-    <script src="${pageContext.request.contextPath}/res/layui/layui.all.js"></script>
     <script>
         var isOk = false;
         function getPageData(pageIndex) {

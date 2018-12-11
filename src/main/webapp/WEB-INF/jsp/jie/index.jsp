@@ -10,11 +10,9 @@
     <meta name="description" content="Fly社区是模块化前端UI框架Layui的官网社区，致力于为web开发提供强劲动力">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/res/layui/css/layui.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/res/css/global.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/res/layui/css/layui.css" media="all">
     <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     <%@ page contentType="text/html;charset=UTF-8" language="java" %>
     <script src="${pageContext.request.contextPath}/res/jquery-3.3.1.js"></script>
-    <script src="${pageContext.request.contextPath}/res/layui/layui.all.js"></script>
     <%--<script>
         var isOk = false;
         function getPageData(pageIndex) {

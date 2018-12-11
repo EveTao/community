@@ -70,7 +70,7 @@ public class UserController {
     public String set(){
         return "user/set";
     }
-
+//  登录
     @RequestMapping("dologin")
     @ResponseBody
     public Respons dologin(User user, HttpServletRequest request){
@@ -91,6 +91,7 @@ public class UserController {
         }
         return respons;
     }
+//    注册
     @RequestMapping(value = "/doreg", produces = "application/json; charset=utf-8")
     @ResponseBody
     public Respons doreg(User user){
@@ -112,7 +113,7 @@ public class UserController {
         return respons;
     }
 
-//    checkEmail
+//    修改邮箱之前，确认该邮箱在数据库中是否存在
     @RequestMapping("/checkEmail")
     @ResponseBody
     public Respons checkEmail(String email){
@@ -130,7 +131,7 @@ public class UserController {
         }
         return respons;
     }
-
+//  上传图片
     @RequestMapping("upload")
     @ResponseBody
     public Respons upload(@RequestParam MultipartFile file,HttpServletRequest request) throws IOException {
@@ -165,11 +166,13 @@ public class UserController {
         }
         return respons;
     }
+//    登出
     @RequestMapping("logout")
     public String logout(HttpServletRequest request){
         request.getSession().invalidate();
         return "redirect:" + request.getServletContext().getContextPath() +"/";
     }
+//    修改用户邮箱等信息
     @RequestMapping("changeInfo")
     @ResponseBody
     public Respons changeInfo(User user,HttpServletRequest request){
@@ -187,7 +190,7 @@ public class UserController {
         }
         return respons;
     }
-//    surePasswd
+//    修改密码之前确认原来密码是否正确
     @RequestMapping("/surePasswd/{passwd}")
     @ResponseBody
     public Respons surePasswd(@PathVariable String passwd,HttpServletRequest request) {
@@ -204,6 +207,7 @@ public class UserController {
         }
         return respons;
     }
+//    修改密码
     @RequestMapping("/repass")
     @ResponseBody
     public Respons repass(User user,HttpServletRequest request){
@@ -212,7 +216,6 @@ public class UserController {
         System.out.println(user);
         user.setPasswd(MD5Utils.getPwd(user.getPasswd()));
         int i=userMapper.updateByPrimaryKeySelective(user);
-
         if(i>0){
             User user1=userMapper.selectByPrimaryKey(user.getId());
             System.out.println(user1);
@@ -226,7 +229,7 @@ public class UserController {
         }
         return respons;
     }
-
+//  进个人主页
     @RequestMapping("/home/{userid}")
     public ModelAndView home(@PathVariable Integer userid, HttpServletRequest request){
         ModelAndView modelAndView=new ModelAndView();
@@ -236,38 +239,19 @@ public class UserController {
         SimpleDateFormat fdate=new SimpleDateFormat("yyyy年MM月dd日");
         String time=fdate.format(user.getJoinTime());
         session.setAttribute("joinTime",time);
-//        request.setAttribute("joinTime",time);
         List<Topic> topics = topicMapper.selectByUserid(user.getId());
-//        session.setAttribute("topic",topics);
         modelAndView.addObject("topic",topics);
-//        request.setAttribute("topic",topics);
-        PageInfo pageInfo = new PageInfo();
-        pageInfo.setPageIndex(1);
-        pageInfo.setKey(userid);
-//        List<Map<String, Object>> maps = commentMapper.selectByUserid(userid);
-        List<Map<String, Object>> maps =commentMapper.selectByUseridPage(pageInfo);
+        List<Map<String, Object>> maps = commentMapper.selectByUserid(userid);
         for (Map<String,Object> map:maps) {
             Date create_time = (Date) map.get("comment_time");
             String stringDate = StringDate.getStringDate(create_time);
             map.put("comment_time",stringDate);
         }
-
         modelAndView.addObject("comment",maps);
-//        request.setAttribute("comment",maps);
         modelAndView.setViewName("user/home");
         return modelAndView;
     }
-    /*public void getCommentPage(@PathVariable Integer pageindex, HttpServletResponse response) throws IOException {
-        int num = userMapper.getTotalCounts();
-        PageInfo pageInfo = new PageInfo();
-        pageInfo.setPageIndex(pageindex);
-        pageInfo.setPageSize(2);
-        List<User> userList = userMapper.getPagedUser(pageInfo);
-        Map<String,Object> map = new HashMap<>();
-        map.put("total",num);
-        map.put("datas",userList);
-        response.getWriter().println(JSON.toJSONString(map));
-    }*/
+//    从@跳转到用户主页
     @RequestMapping("jumphome/{username}")
     public ModelAndView jumphome(@PathVariable String username)
     {

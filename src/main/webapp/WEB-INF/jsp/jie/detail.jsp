@@ -82,7 +82,7 @@
                     <span class="layui-badge layui-bg-black">置顶</span>
                     <span class="layui-badge layui-bg-red">精帖</span>
 
-                    <div class="fly-admin-box" data-id="123">
+                    <div class="fly-admin-box" data-id="${topic.id}">
                         <span class="layui-btn layui-btn-xs jie-admin" type="del">删除</span>
 
                         <span class="layui-btn layui-btn-xs jie-admin" type="set" field="stick" rank="1">置顶</span>
