@@ -55,30 +55,40 @@ public class JieController {
             comment.setUserId(user.getId());
             comment.setCommentTime(new Date());
             int i = commentMapper.insertSelective(comment);
+            Topic topic;
             if (i > 0) {
-                res.setStatus(0);
-                res.setAction(request.getServletContext().getContextPath() + "/jie/detail/" + comment.getTopicId());
+                topic = topicMapper.selectByPrimaryKey(comment.getTopicId());
+                topic.setCommentNum(topic.getCommentNum()+1);
+                int i1 = topicMapper.updateByPrimaryKeySelective(topic);
+                if(i1>0){
+                    res.setStatus(0);
+                    res.setAction(request.getServletContext().getContextPath() + "/jie/detail/" + comment.getTopicId());
+                }else {
+                    respons.setStatus(1);
+                }
             } else {
                 respons.setStatus(1);
             }
         }else {
             res.setStatus(0);
             res.setAction(request.getServletContext().getContextPath()+"/user/login/");
+            String referer = request.getHeader("referer");
+            request.getSession().setAttribute("referer",referer);
         }
         respons.getWriter().println(JSON.toJSONString(res));
     }
     @RequestMapping("/index/{id}")
     public ModelAndView index(@PathVariable Integer id) {
-        List<Map<String,Object>> mapList = topicMapper.getAllTopicsByCategoryId(id);
+//        List<Map<String,Object>> mapList = topicMapper.getAllTopicsByCategoryId(id);
         List<Category> categories = categoryMapper.selectAll();
-        for (Map<String,Object> map:mapList) {
-            Date create_time = (Date) map.get("create_time");
-            String stringDate = StringDate.getStringDate(create_time);
-            map.put("create_time",stringDate);
-        }
+//        for (Map<String,Object> map:mapList) {
+//            Date create_time = (Date) map.get("create_time");
+//            String stringDate = StringDate.getStringDate(create_time);
+//            map.put("create_time",stringDate);
+//        }
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("jie/index");
-        modelAndView.addObject("topics",mapList);
+//        modelAndView.addObject("topics",mapList);
         modelAndView.addObject("category",categories);
         modelAndView.addObject("categoryid",id);
         return modelAndView;

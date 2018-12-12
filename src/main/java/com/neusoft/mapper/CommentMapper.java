@@ -26,4 +26,9 @@ public interface CommentMapper {
     int getCount();
 
     List<Map<String,Object>> selectByUseridPage(PageInfo pageInfo);
+
+    List<Map<String,Object>> selectByUseridPart(Integer userid);
+
+    List<Map<String,Object>> selectTop();
+
 }

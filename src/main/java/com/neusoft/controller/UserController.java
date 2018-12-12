@@ -44,20 +44,14 @@ public class UserController {
         return "user/reg";
     }
     @RequestMapping("/login")
-    public String login(){
+    public String login(HttpServletRequest request){
+        HttpSession session=request.getSession();
+        if(session.getAttribute("referer")==null||session.getAttribute("referer")==""){
+            String referer = request.getHeader("referer");
+            session.setAttribute("referer",referer);
+        }
         return "user/login";
     }
-    /*@RequestMapping("home")
-    public String home(HttpServletRequest request) throws ParseException {
-        HttpSession session=request.getSession();
-        User user=(User) session.getAttribute("userinfo");
-        SimpleDateFormat fdate=new SimpleDateFormat("yyyy年MM月dd日");
-        String time=fdate.format(user.getJoinTime());
-        session.setAttribute("joinTime",time);
-        List<Topic> topics = topicMapper.selectByUserid(user.getId());
-        session.setAttribute("topic",topics);
-        return "user/home";
-    }*/
     @RequestMapping("index")
     public String index(){
         return "user/index";
@@ -74,14 +68,21 @@ public class UserController {
     @RequestMapping("dologin")
     @ResponseBody
     public Respons dologin(User user, HttpServletRequest request){
-        System.out.println(user);
+//        System.out.println(user);
+        HttpSession session=request.getSession();
+        String referer;
+        if(session.getAttribute("referer")==null||session.getAttribute("referer")==""){
+            referer="/";
+        }else {
+            referer= (String) session.getAttribute("referer");
+            session.removeAttribute("referer");
+        }
         user.setPasswd(MD5Utils.getPwd(user.getPasswd()));
         user = userMapper.selectByEmailPwd(user);
         Respons respons=new Respons();
-        HttpSession session=request.getSession();
         if(user!=null){
             respons.setStatus(0);
-            respons.setAction("/");
+            respons.setAction(referer);
             respons.setMsg("登录成功");
             session.setAttribute("userinfo",user);
         }else {
@@ -241,7 +242,10 @@ public class UserController {
         session.setAttribute("joinTime",time);
         List<Topic> topics = topicMapper.selectByUserid(user.getId());
         modelAndView.addObject("topic",topics);
-        List<Map<String, Object>> maps = commentMapper.selectByUserid(userid);
+        //        獲取全部的評論
+//        List<Map<String, Object>> maps = commentMapper.selectByUserid(userid);
+        //        獲取部分評論
+        List<Map<String, Object>> maps = commentMapper.selectByUseridPart(userid);
         for (Map<String,Object> map:maps) {
             Date create_time = (Date) map.get("comment_time");
             String stringDate = StringDate.getStringDate(create_time);

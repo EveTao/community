@@ -33,7 +33,12 @@ public interface TopicMapper {
     List<Map<String,Object>> getAllTopicsByCategoryId(Integer id);
 
     int count();
+    int countByCategoryId(Integer categoryId);
 
     List<Map<String,Object>> getAllTopicsByPage(PageInfo pageInfo);
+
+    List<Map<String,Object>> getAllTopicsByPageType(PageInfo pageInfo);
+
+    List<Map<String,Object>> getAllTopicsHot();
 
 }

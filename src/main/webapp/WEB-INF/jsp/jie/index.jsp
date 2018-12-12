@@ -47,7 +47,7 @@
 
             <c:if test="${!empty userinfo}">
                 <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><a href="${pageContext.request.contextPath}/user/index.html">我发表的贴</a></li>
-                <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><a href="${pageContext.request.contextPath}/user/index.html#collection">我收藏的贴</a></li>
+                <%--<li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><a href="${pageContext.request.contextPath}/user/index.html#collection">我收藏的贴</a></li>--%>
             </c:if>
         </ul>
 
@@ -82,42 +82,9 @@
                 </div>
 
                 <ul class="fly-list">
-                    <c:forEach items="${topics}" var="topic">
-                        <li>
-                            <a href="${pageContext.request.contextPath}/user/home/${topic.userid}" class="fly-avatar">
-                                <c:choose>
-                                    <c:when test="${topic.pic_path != ''}">
-                                        <img src="${pageContext.request.contextPath}/res/uploadImg/${topic.pic_path}" alt="${topic.userid}">
-                                    </c:when>
-                                    <c:otherwise>
-                                        <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg">
-                                    </c:otherwise>
-                                </c:choose>
-                            </a>
-                            <h2>
-                                <a class="layui-badge">${topic.name}</a>
-                                <a href="${pageContext.request.contextPath}/jie/detail/${topic.id}">${topic.title}</a>
-                            </h2>
-                            <div class="fly-list-info">
-                                <a href="${pageContext.request.contextPath}/user/home/${topic.userid}" link>
-                                    <cite>${topic.nickname}</cite>
-                                    <!--
-                                    <i class="iconfont icon-renzheng" title="认证信息：XXX"></i>
-                                    <i class="layui-badge fly-badge-vip">VIP3</i>
-                                    -->
-                                </a>
-                                <span>${topic.create_time}</span>
-                                <span class="fly-list-kiss layui-hide-xs" title="悬赏飞吻"><i class="iconfont icon-kiss"></i> ${topic.kiss_num}</span>
-                                <!--<span class="layui-badge fly-badge-accept layui-hide-xs">已结</span>-->
-                                <span class="fly-list-nums">
-                <i class="iconfont icon-pinglun1" title="回答"></i> ${topic.count}
-              </span>
-                            </div>
-                            <div class="fly-list-badge">
-                                <!--<span class="layui-badge layui-bg-red">精帖</span>-->
-                            </div>
-                        </li>
-                    </c:forEach>
+                    <div id="data">
+                    </div>
+
                     <%--<script id="demo" type="text/html">
                             {{#  layui.each(d.datas, function(index, item){ }}
                             <li>
@@ -159,15 +126,7 @@
                 <!-- <div class="fly-none">没有相关数据</div> -->
 
                 <div style="text-align: center">
-                    <div class="laypage-main">
-                        <span class="laypage-curr">1</span>
-                        <a href="/${pageContext.request.contextPath}/jie/page/2/">2</a>
-                        <a href="/${pageContext.request.contextPath}/jie/page/3/">3</a>
-                        <a href="/${pageContext.request.contextPath}/jie/page/4/">4</a>
-                        <a href="/${pageContext.request.contextPath}/jie/page/5/">5</a>
-                        <span>…</span>
-                        <a href="/${pageContext.request.contextPath}/jie/page/148/" class="laypage-last" title="尾页">尾页</a>
-                        <a href="/${pageContext.request.contextPath}/jie/page/2/" class="laypage-next">下一页</a>
+                    <div id="page">
                     </div>
 
                 </div>
@@ -272,7 +231,93 @@
         ,base: '${pageContext.request.contextPath}/res/mods/'
     }).extend({
         fly: 'index'
-    }).use('fly');
+    }).use(['fly','laypage','laytpl'],function () {
+        var $ = layui.jquery;
+        function fillCurrentPageData(jsonObj) {
+            var getTpl = demo.innerHTML;
+            var view = document.getElementById('data');
+            layui.laytpl(getTpl).render(jsonObj, function(html){
+                view.innerHTML = html;
+            });
+        }
+        function getPageData(pageInfo) {
+            if(!pageInfo)
+            {
+                pageInfo = {};
+                pageInfo.pageSize = 5;
+                pageInfo.pageIndex = 1;
+            }
+            $.ajax({
+                url:'${pageContext.request.contextPath}/getTopicPage/${categoryid}/',
+                type:'post',
+                dataType:'json',
+                data:pageInfo,
+                success:function (jsonObj) {
+                    //执行一个laypage实例,渲染分頁代碼
+                    var laypage = layui.laypage;
+                    laypage.render({
+                        elem: 'page' //注意，这里的 test1 是 ID，不用加 # 号
+                        , limit: pageInfo.pageSize
+                        , curr: pageInfo.pageIndex
+                        , count: jsonObj.total//数据总数，从服务端得到
+                        , first: "首页"
+                        , last: "尾页"
+                        , jump: function (obj, first) {
+                            //obj包含了当前分页的所有参数，比如：
+//                        console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
+//                        console.log(obj.limit); //得到每页显示的条数
+                            if (!first) {
+                                pageInfo.pageIndex = obj.curr;
+                                pageInfo.pageSize = obj.limit;
+                                getPageData(pageInfo);
+                            }
+                        }
+                    });
+                    //替換帖子內容
+                    fillCurrentPageData(jsonObj);
+                }
+            })
+        }
+        $(function () {
+            getPageData();
+        })
+
+    });
+</script>
+<script id="demo" type="text/html">
+    {{#  layui.each(d.datas, function(index, topic){ }}
+    <li>
+        <a href="${pageContext.request.contextPath}/user/home/{{topic.userid}}" class="fly-avatar">
+            {{#  if(topic.pic_path!=''){ }}
+            <img src="${pageContext.request.contextPath}/res/uploadImg/{{topic.pic_path}}" alt="{{topic.userid}}">
+            {{#  } else { }}
+            <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg">
+            {{#  } }}
+        </a>
+        <h2>
+            <a class="layui-badge">{{topic.name}}</a>
+            <a href="${pageContext.request.contextPath}/jie/detail/{{topic.id}}">{{topic.title}}</a>
+        </h2>
+        <div class="fly-list-info">
+            <a href="${pageContext.request.contextPath}/user/home/{{topic.userid}}" link>
+                <cite>{{topic.nickname}}</cite>
+                <!--
+                <i class="iconfont icon-renzheng" title="认证信息：XXX"></i>
+                <i class="layui-badge fly-badge-vip">VIP3</i>
+                -->
+            </a>
+            <span>{{topic.create_time}}</span>
+            <span class="fly-list-kiss layui-hide-xs" title="悬赏飞吻"><i class="iconfont icon-kiss"></i> {{topic.kiss_num}}</span>
+            <!--<span class="layui-badge fly-badge-accept layui-hide-xs">已结</span>-->
+            <span class="fly-list-nums">
+                <i class="iconfont icon-pinglun1" title="回答"></i> {{topic.count}}
+              </span>
+        </div>
+        <div class="fly-list-badge">
+            <!--<span class="layui-badge layui-bg-red">精帖</span>-->
+        </div>
+    </li>
+    {{#  }); }}
 </script>
 
 </body>

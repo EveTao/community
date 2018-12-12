@@ -124,7 +124,7 @@
       select tab_comment.id,tab_comment.comment_time,tab_comment.topic_id,tab_comment
 .user_id,tab_topic.title,tab_comment.comment_content
 from tab_comment JOIN tab_topic on tab_comment.topic_id=tab_topic.id
-where tab_comment.user_id=7
+where tab_comment.user_id=#{id}
 ORDER BY tab_comment.comment_time DESC
   </select>
   <select id="getCount" resultType="java.lang.Integer">
@@ -137,5 +137,20 @@ from tab_comment JOIN tab_topic on tab_comment.topic_id=tab_topic.id
 where tab_comment.user_id=#{key }
 ORDER BY tab_comment.comment_time DESC
 LIMIT #{pageStart},#{pageSize}
+  </select>
+  <select id="selectByUseridPart" resultType="map" parameterType="java.lang.Integer" >
+      select tab_comment.id,tab_comment.comment_time,tab_comment.topic_id,tab_comment
+.user_id,tab_topic.title,tab_comment.comment_content
+from tab_comment JOIN tab_topic on tab_comment.topic_id=tab_topic.id
+where tab_comment.user_id=#{id}
+ORDER BY tab_comment.comment_time DESC
+limit 0,10
+  </select>
+  <select id="selectTop" resultType="map">
+      select count(tab_comment.id) count,tab_comment.user_id,tab_user.nickname ,tab_user.pic_path
+  from tab_comment JOIN tab_user on tab_user.id=tab_comment.user_id
+  GROUP BY tab_comment.user_id
+  ORDER BY count(tab_comment.id) DESC
+  LIMIT 0,12
   </select>
 </mapper>

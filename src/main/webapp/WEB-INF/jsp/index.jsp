@@ -29,7 +29,7 @@
 
             <c:if test="${!empty userinfo}">
                 <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><a href="user/index.html">我发表的贴</a></li>
-                <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><a href="user/index.html#collection">我收藏的贴</a></li>
+                <%--<li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><a href="user/index.html#collection">我收藏的贴</a></li>--%>
             </c:if>
             </ul>
 
@@ -175,112 +175,33 @@
                 <h3 class="fly-panel-title">回贴周榜</h3>
                 <dl>
                     <!--<i class="layui-icon fly-loading">&#xe63d;</i>-->
-                    <dd>
-                        <a href="user/home.html">
-                            <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg"><cite>贤心</cite><i>106次回答</i>
-                        </a>
-                    </dd>
-                    <dd>
-                        <a href="user/home.html">
-                            <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg"><cite>贤心</cite><i>106次回答</i>
-                        </a>
-                    </dd>
-                    <dd>
-                        <a href="user/home.html">
-                            <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg"><cite>贤心</cite><i>106次回答</i>
-                        </a>
-                    </dd>
-                    <dd>
-                        <a href="user/home.html">
-                            <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg"><cite>贤心</cite><i>106次回答</i>
-                        </a>
-                    </dd>
-                    <dd>
-                        <a href="user/home.html">
-                            <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg"><cite>贤心</cite><i>106次回答</i>
-                        </a>
-                    </dd>
-                    <dd>
-                        <a href="user/home.html">
-                            <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg"><cite>贤心</cite><i>106次回答</i>
-                        </a>
-                    </dd>
-                    <dd>
-                        <a href="user/home.html">
-                            <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg"><cite>贤心</cite><i>106次回答</i>
-                        </a>
-                    </dd>
-                    <dd>
-                        <a href="user/home.html">
-                            <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg"><cite>贤心</cite><i>106次回答</i>
-                        </a>
-                    </dd>
-                    <dd>
-                        <a href="user/home.html">
-                            <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg"><cite>贤心</cite><i>106次回答</i>
-                        </a>
-                    </dd>
-                    <dd>
-                        <a href="user/home.html">
-                            <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg"><cite>贤心</cite><i>106次回答</i>
-                        </a>
-                    </dd>
-                    <dd>
-                        <a href="user/home.html">
-                            <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg"><cite>贤心</cite><i>106次回答</i>
-                        </a>
-                    </dd>
-                    <dd>
-                        <a href="user/home.html">
-                            <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg"><cite>贤心</cite><i>106次回答</i>
-                        </a>
-                    </dd>
+                    <c:forEach items="${tops}" var="top">
+                        <dd>
+                            <a href="${pageContext.request.contextPath}/user/home/${top.user_id}">
+                                <c:choose>
+                                    <c:when test="${top.pic_path!=''}">
+                                        <img src="${pageContext.request.contextPath}/res/uploadImg/${top.pic_path}">
+                                    </c:when>
+                                    <c:otherwise>
+                                        <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg">
+                                    </c:otherwise>
+                                </c:choose>
+                                <cite>${top.nickname}</cite>
+                                <i>${top.count}次回答</i>
+                            </a>
+                        </dd>
+                    </c:forEach>
                 </dl>
             </div>
 
             <dl class="fly-panel fly-list-one">
                 <dt class="fly-panel-title">本周热议</dt>
-                <dd>
-                    <a href="jie/detail.html">基于 layui 的极简社区页面模版</a>
-                    <span><i class="iconfont icon-pinglun1"></i> 16</span>
-                </dd>
-                <dd>
-                    <a href="jie/detail.html">基于 layui 的极简社区页面模版</a>
-                    <span><i class="iconfont icon-pinglun1"></i> 16</span>
-                </dd>
-                <dd>
-                    <a href="jie/detail.html">基于 layui 的极简社区页面模版</a>
-                    <span><i class="iconfont icon-pinglun1"></i> 16</span>
-                </dd>
-                <dd>
-                    <a href="jie/detail.html">基于 layui 的极简社区页面模版</a>
-                    <span><i class="iconfont icon-pinglun1"></i> 16</span>
-                </dd>
-                <dd>
-                    <a href="jie/detail.html">基于 layui 的极简社区页面模版</a>
-                    <span><i class="iconfont icon-pinglun1"></i> 16</span>
-                </dd>
-                <dd>
-                    <a href="jie/detail.html">基于 layui 的极简社区页面模版</a>
-                    <span><i class="iconfont icon-pinglun1"></i> 16</span>
-                </dd>
-                <dd>
-                    <a href="jie/detail.html">基于 layui 的极简社区页面模版</a>
-                    <span><i class="iconfont icon-pinglun1"></i> 16</span>
-                </dd>
-                <dd>
-                    <a href="jie/detail.html">基于 layui 的极简社区页面模版</a>
-                    <span><i class="iconfont icon-pinglun1"></i> 16</span>
-                </dd>
-                <dd>
-                    <a href="jie/detail.html">基于 layui 的极简社区页面模版</a>
-                    <span><i class="iconfont icon-pinglun1"></i> 16</span>
-                </dd>
-                <dd>
-                    <a href="jie/detail.html">基于 layui 的极简社区页面模版</a>
-                    <span><i class="iconfont icon-pinglun1"></i> 16</span>
-                </dd>
-
+                <c:forEach items="${TopicsHot}" var="hot">
+                    <dd>
+                        <a href="${pageContext.request.contextPath}/jie/detail/${hot.id}">${hot.title}</a>
+                        <span><i class="iconfont icon-pinglun1"></i> ${hot.comment_num}</span>
+                    </dd>
+                </c:forEach>
                 <!-- 无数据时 -->
                 <!--
                 <div class="fly-none">没有相关数据</div>
@@ -352,7 +273,7 @@
                 pageInfo.pageIndex = 1;
             }
             $.ajax({
-                url:'${pageContext.request.contextPath}/getTopicPage/',
+                url:'${pageContext.request.contextPath}/getTopicPage/0/',
                 type:'post',
                 dataType:'json',
                 data:pageInfo,
@@ -371,7 +292,6 @@
 //                        console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
 //                        console.log(obj.limit); //得到每页显示的条数
                             if (!first) {
-                                getPageData(obj.curr);
                                 pageInfo.pageIndex = obj.curr;
                                 pageInfo.pageSize = obj.limit;
                                 getPageData(pageInfo);
@@ -397,8 +317,8 @@
     {{#  layui.each(d.datas, function(index, topic){ }}
     <li>
         <a href="${pageContext.request.contextPath}/user/home/{{topic.userid}}" class="fly-avatar">
-            {{#  if(!topic.pic_path){ }}
-            {{ <img src="${pageContext.request.contextPath}/res/uploadImg/{{topic.pic_path}}" alt="{{topic.userid}}"> }}
+            {{#  if(topic.pic_path!=''){ }}
+             <img src="${pageContext.request.contextPath}/res/uploadImg/{{topic.pic_path}}" alt="{{topic.userid}}">
             {{#  } else { }}
             <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg">
             {{#  } }}

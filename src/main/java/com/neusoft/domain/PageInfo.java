@@ -4,9 +4,18 @@ package com.neusoft.domain;
  */
 public class PageInfo {
     int pageIndex;
-    int pageSize=2;
+    int pageSize;
     int pageStart;
     int key;
+    int type;
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
 
     public int getKey() {
         return key;

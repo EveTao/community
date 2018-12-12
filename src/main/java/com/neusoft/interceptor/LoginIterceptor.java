@@ -15,6 +15,10 @@ public class LoginIterceptor implements HandlerInterceptor {
             return true;
         }else {
             httpServletRequest.getRequestDispatcher("/WEB-INF/jsp/user/login.jsp").forward(httpServletRequest,httpServletResponse);
+            if(session.getAttribute("referer")==null||session.getAttribute("referer")==""){
+                String referer = httpServletRequest.getRequestURI();
+                session.setAttribute("referer",referer);
+            }
         }
         return false;
     }
