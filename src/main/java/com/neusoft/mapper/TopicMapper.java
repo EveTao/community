@@ -1,5 +1,6 @@
 package com.neusoft.mapper;
 
+import com.neusoft.domain.PageInfo;
 import com.neusoft.domain.Topic;
 import com.neusoft.util.Page;
 
@@ -31,5 +32,8 @@ public interface TopicMapper {
 
     List<Map<String,Object>> getAllTopicsByCategoryId(Integer id);
 
+    int count();
+
+    List<Map<String,Object>> getAllTopicsByPage(PageInfo pageInfo);
 
 }

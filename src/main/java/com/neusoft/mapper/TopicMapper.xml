@@ -255,4 +255,16 @@ LEFT JOIN (select tab_comment.topic_id,count(tab_comment.topic_id) count from ta
       topic_category_id = #{topicCategoryId,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="count" resultType="java.lang.Integer"  >
+    select count(id) from tab_topic
+  </select>
+  <select id="getAllTopicsByPage" resultType="map" parameterType="com.neusoft.domain.PageInfo">
+    select tab_topic.id,tab_topic.title,tab_user.id userid,tab_user.nickname,tab_user.pic_path
+,tab_topic.create_time,tab_topic.kiss_num, tab_topic_category.name,a.count from tab_topic
+join tab_user on tab_topic.userid = tab_user.id
+join tab_topic_category on tab_topic.topic_category_id = tab_topic_category.id
+left JOIN (select count(id) count,topic_id from tab_comment GROUP BY topic_id) a on a.topic_id=tab_topic.id
+ORDER BY tab_topic.create_time DESC
+limit #{pageStart},#{pageSize}
+  </select>
 </mapper>
