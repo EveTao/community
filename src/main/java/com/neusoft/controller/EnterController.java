@@ -26,6 +26,7 @@ public class EnterController {
     CategoryMapper categoryMapper;
     @Autowired
     CommentMapper commentMapper;
+//    进入首页
     @RequestMapping("/")
     public ModelAndView index()
     {
@@ -50,22 +51,15 @@ public class EnterController {
         modelAndView.addObject("toptopics",allTopTopics);
         modelAndView.addObject("category",categories);
         modelAndView.addObject("tops",commentMaps);
+        modelAndView.addObject("typeid",0);
         modelAndView.addObject("TopicsHot",allTopicsHot);
         return modelAndView;
     }
 //    取得帖子的翻页内容
-    @RequestMapping("getTopicPage/{categoryId}")
-    public void getTopicPage(@PathVariable Integer categoryId, PageInfo pageInfo, HttpServletResponse response) throws IOException {
-        int num;
-        List<Map<String,Object>> mapList=new ArrayList<>();
-        if(categoryId==0){
-            num=topicMapper.count();
-            mapList = topicMapper.getAllTopicsByPage(pageInfo);
-        }else {
-            num=topicMapper.countByCategoryId(categoryId);
-            pageInfo.setType(categoryId);
-            mapList=topicMapper.getAllTopicsByPageType(pageInfo);
-        }
+    @RequestMapping("getTopicPage")
+    public void getTopicPage(PageInfo pageInfo, HttpServletResponse response) throws IOException {
+        int num=topicMapper.countByCategoryId(pageInfo);
+        List<Map<String,Object>> mapList = topicMapper.getAllTopicsByPage(pageInfo);
         for (Map<String,Object> map:mapList) {
             Date create_time = (Date) map.get("create_time");
             String stringDate = StringDate.getStringDate(create_time);

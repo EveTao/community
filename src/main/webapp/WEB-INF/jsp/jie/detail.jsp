@@ -23,49 +23,7 @@
 
 <%@include file="../common/header.jsp"%>
 
-<div class="layui-hide-xs">
-    <div class="fly-panel fly-column">
-        <div class="layui-container">
-            <ul class="layui-clear">
-                <li class="layui-hide-xs layui-this"><a href="/">首页</a></li>
-                <c:forEach items="${category}" var="cate">
-                    <c:choose>
-                        <c:when test="${cate.id==topic.category_id }">
-                            <li class="layui-this"><a href="${pageContext.request.contextPath}/jie/index/${cate.id }">${cate.name}
-                                <c:if test="${cate.name=='分享'}">
-                                    <span class="layui-badge-dot"></span>
-                                </c:if>
-                            </a>
-                            </li>
-                        </c:when>
-                        <c:otherwise>
-                            <li><a href="${pageContext.request.contextPath}/jie/index/${cate.id }">${cate.name}
-                                <c:if test="${cate.name=='分享'}">
-                                    <span class="layui-badge-dot"></span>
-                                </c:if>
-                            </a>
-                            </li>
-                        </c:otherwise>
-                    </c:choose>
-                </c:forEach>
-                <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><span class="fly-mid"></span></li>
-
-                <c:if test="${!empty userinfo }">
-                    <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><a href="user/index">我发表的贴</a></li>
-                    <%--<li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><a href="user/index.html#collection">我收藏的贴</a></li>--%>
-                </c:if>
-            </ul>
-
-            <div class="fly-column-right layui-hide-xs">
-                <span class="fly-search"><i class="layui-icon"></i></span>
-                <a href="${pageContext.request.contextPath}/jie/add" class="layui-btn">发表新帖</a>
-            </div>
-            <div class="layui-hide-sm layui-show-xs-block" style="margin-top: -10px; padding-bottom: 10px; text-align: center;">
-                <a href="${pageContext.request.contextPath}/jie/add" class="layui-btn">发表新帖</a>
-            </div>
-        </div>
-    </div>
-</div>
+<%@include file="../common/column.jsp"%>
 
 <div class="layui-container">
     <div class="layui-row layui-col-space15">
@@ -78,19 +36,34 @@
 
                     <span class="layui-badge" style="background-color: #999;">未结</span>
                     <!-- <span class="layui-badge" style="background-color: #5FB878;">已结</span> -->
+                    <c:if test="${topic.is_top==1}">
+                        <span class="layui-badge layui-bg-black">置顶</span>
+                    </c:if>
+                    <c:if test="${topic.is_good==1}">
+                        <span class="layui-badge layui-bg-red">精帖</span>
+                    </c:if>
+                    <c:if test="${userinfo.isAdmin==1}">
+                        <div class="fly-admin-box" data-id="${topic.id}">
+                            <span class="layui-btn layui-btn-xs jie-admin" type="del">删除</span>
+                            <c:choose>
+                                <c:when test="${topic.is_top==0}">
+                                    <span class="layui-btn layui-btn-xs jie-admin" type="set" field="stick" rank="1">置顶</span>
+                                </c:when>
+                                <c:otherwise>
+                                    <span class="layui-btn layui-btn-xs jie-admin" type="set" field="stick" rank="0" style="background-color:#ccc;">取消置顶</span>
+                                </c:otherwise>
+                            </c:choose>
+                            <c:choose>
+                                <c:when test="${topic.is_good==0}">
+                                    <span class="layui-btn layui-btn-xs jie-admin" type="set" field="status" rank="1">加精</span>
+                                </c:when>
+                                <c:otherwise>
+                                    <span class="layui-btn layui-btn-xs jie-admin" type="set" field="status" rank="0" style="background-color:#ccc;">取消加精</span>
+                                </c:otherwise>
+                            </c:choose>
+                        </div>
+                    </c:if>
 
-                    <span class="layui-badge layui-bg-black">置顶</span>
-                    <span class="layui-badge layui-bg-red">精帖</span>
-
-                    <div class="fly-admin-box" data-id="${topic.id}">
-                        <span class="layui-btn layui-btn-xs jie-admin" type="del">删除</span>
-
-                        <span class="layui-btn layui-btn-xs jie-admin" type="set" field="stick" rank="1">置顶</span>
-                        <!-- <span class="layui-btn layui-btn-xs jie-admin" type="set" field="stick" rank="0" style="background-color:#ccc;">取消置顶</span> -->
-
-                        <span class="layui-btn layui-btn-xs jie-admin" type="set" field="status" rank="1">加精</span>
-                        <!-- <span class="layui-btn layui-btn-xs jie-admin" type="set" field="status" rank="0" style="background-color:#ccc;">取消加精</span> -->
-                    </div>
                     <span class="fly-list-nums" id="viewTimes">
             <a href="#comment"><i class="iconfont" title="回答">&#xe60c;</i> ${topic.count}</a>
             <i class="iconfont" title="人气" >&#xe60b;</i> ${topic.view_times}
@@ -219,46 +192,12 @@
         <div class="layui-col-md4">
             <dl class="fly-panel fly-list-one">
                 <dt class="fly-panel-title">本周热议</dt>
-                <dd>
-                    <a href="">基于 layui 的极简社区页面模版</a>
-                    <span><i class="iconfont icon-pinglun1"></i> 16</span>
-                </dd>
-                <dd>
-                    <a href="">基于 layui 的极简社区页面模版</a>
-                    <span><i class="iconfont icon-pinglun1"></i> 16</span>
-                </dd>
-                <dd>
-                    <a href="">基于 layui 的极简社区页面模版</a>
-                    <span><i class="iconfont icon-pinglun1"></i> 16</span>
-                </dd>
-                <dd>
-                    <a href="">基于 layui 的极简社区页面模版</a>
-                    <span><i class="iconfont icon-pinglun1"></i> 16</span>
-                </dd>
-                <dd>
-                    <a href="">基于 layui 的极简社区页面模版</a>
-                    <span><i class="iconfont icon-pinglun1"></i> 16</span>
-                </dd>
-                <dd>
-                    <a href="">基于 layui 的极简社区页面模版</a>
-                    <span><i class="iconfont icon-pinglun1"></i> 16</span>
-                </dd>
-                <dd>
-                    <a href="">基于 layui 的极简社区页面模版</a>
-                    <span><i class="iconfont icon-pinglun1"></i> 16</span>
-                </dd>
-                <dd>
-                    <a href="">基于 layui 的极简社区页面模版</a>
-                    <span><i class="iconfont icon-pinglun1"></i> 16</span>
-                </dd>
-                <dd>
-                    <a href="">基于 layui 的极简社区页面模版</a>
-                    <span><i class="iconfont icon-pinglun1"></i> 16</span>
-                </dd>
-                <dd>
-                    <a href="">基于 layui 的极简社区页面模版</a>
-                    <span><i class="iconfont icon-pinglun1"></i> 16</span>
-                </dd>
+                <c:forEach items="${TopicsHot}" var="hot">
+                    <dd>
+                        <a href="${pageContext.request.contextPath}/jie/detail/${hot.id}">${hot.title}</a>
+                        <span><i class="iconfont icon-pinglun1"></i> ${hot.comment_num}</span>
+                    </dd>
+                </c:forEach>
 
                 <!-- 无数据时 -->
                 <!--

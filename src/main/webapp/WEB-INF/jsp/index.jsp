@@ -18,30 +18,7 @@
 <%@include file="common/header.jsp"%>
 
 
-<div class="fly-panel fly-column">
-    <div class="layui-container">
-        <ul class="layui-clear">
-            <li class="layui-hide-xs layui-this"><a href="/">首页</a></li>
-            <c:forEach items="${category}" var="cate">
-                <li><a href="${pageContext.request.contextPath}/jie/index/${cate.id }">${cate.name}<c:if test="${cate.name=='分享'}"><span class="layui-badge-dot"></span></c:if></a></li>
-            </c:forEach>
-            <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><span class="fly-mid"></span></li>
-
-            <c:if test="${!empty userinfo}">
-                <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><a href="user/index.html">我发表的贴</a></li>
-                <%--<li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><a href="user/index.html#collection">我收藏的贴</a></li>--%>
-            </c:if>
-            </ul>
-
-        <div class="fly-column-right layui-hide-xs">
-            <span class="fly-search"><i class="layui-icon"></i></span>
-            <a href="${pageContext.request.contextPath}/jie/add" class="layui-btn">发表新帖</a>
-        </div>
-        <div class="layui-hide-sm layui-show-xs-block" style="margin-top: -10px; padding-bottom: 10px; text-align: center;">
-            <a href="${pageContext.request.contextPath}/jie/add" class="layui-btn">发表新帖</a>
-        </div>
-    </div>
-</div>
+<%@include file="common/column.jsp"%>
 
 <div class="layui-container">
     <div class="layui-row layui-col-space15">
@@ -93,18 +70,15 @@
 
             <div class="fly-panel" style="margin-bottom: 0;">
 
-                <div class="fly-panel-title fly-filter">
-                    <a href="" class="layui-this">综合</a>
+                <div class="fly-panel-title fly-filter" id="layui-this">
+                    <a href="${pageContext.request.contextPath}/jie/index/0/0" class="layui-type">综合</a>
                     <span class="fly-mid"></span>
-                    <a href="">未结</a>
+                    <a href="${pageContext.request.contextPath}/jie/index/0/1">未结</a>
                     <span class="fly-mid"></span>
-                    <a href="">已结</a>
+                    <a href="${pageContext.request.contextPath}/jie/index/0/2">已结</a>
                     <span class="fly-mid"></span>
-                    <a href="">精华</a>
+                    <a href="${pageContext.request.contextPath}/jie/index/0/3">精华</a>
                     <span class="fly-filter-right layui-hide-xs">
-            <a href="" class="layui-this">按最新</a>
-            <span class="fly-mid"></span>
-            <a href="">按热议</a>
           </span>
                 </div>
 
@@ -162,7 +136,6 @@
                 <div class="fly-panel-main fly-signin-main">
                     <button class="layui-btn layui-btn-danger" id="LAY_signin">今日签到</button>
                     <span>可获得<cite>5</cite>飞吻</span>
-
                     <!-- 已签到状态 -->
                     <!--
                     <button class="layui-btn layui-btn-disabled">今日已签到</button>
@@ -271,9 +244,11 @@
                 pageInfo = {};
                 pageInfo.pageSize = 5;
                 pageInfo.pageIndex = 1;
+                pageInfo.categor=0;
+                pageInfo.type=${typeid};
             }
             $.ajax({
-                url:'${pageContext.request.contextPath}/getTopicPage/0/',
+                url:'${pageContext.request.contextPath}/getTopicPage',
                 type:'post',
                 dataType:'json',
                 data:pageInfo,
@@ -300,6 +275,8 @@
                     });
                     //替換帖子內容
                     fillCurrentPageData(jsonObj);
+                    $('#layui-type').find('a').eq(${typeid}).addClass('layui-this').siblings().removeClass('layui-this');
+
                 }
             })
         }

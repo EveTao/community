@@ -9,16 +9,36 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Controller
-public class TopicController {
+@RequestMapping("api")
+public class ApiController {
     @Autowired
     TopicMapper topicMapper;
 
+    @RequestMapping("jie-set")
+    public void setTopic(Integer id, Integer rank, String field, HttpServletResponse response, HttpServletRequest request) throws IOException {
+        Topic topic=new Topic();
+        topic.setId(id);
+        if(field.equals("stick")){
+            topic.setIsTop(rank);
+        }else {
+            topic.setIsGood(rank);
+        }
+        int i = topicMapper.updateByPrimaryKeySelective(topic);
+        Respons res=new Respons();
+        if(i>0){
+            res.setStatus(0);
+        }else {
+            res.setStatus(1);
+        }
+        response.getWriter().println(JSON.toJSONString(res));
+    }
 
-    @RequestMapping("api/jie-delete")
+    @RequestMapping("jie-delete")
     public void deleteTopic(Topic topic, HttpServletResponse response) throws IOException {
         System.out.println(topic.getId());
         topic.setIsDelete(1);

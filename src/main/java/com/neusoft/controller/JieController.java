@@ -44,6 +44,7 @@ public class JieController {
     @Autowired
     CommentMapper commentMapper;
 
+//    回帖
     @RequestMapping("/reply")
     public void reply(Comment comment,String content, HttpServletRequest request,HttpServletResponse respons) throws IOException {
         HttpSession session=request.getSession();
@@ -77,8 +78,9 @@ public class JieController {
         }
         respons.getWriter().println(JSON.toJSONString(res));
     }
-    @RequestMapping("/index/{id}")
-    public ModelAndView index(@PathVariable Integer id) {
+//    进分区，提问分享讨论等
+    @RequestMapping("/index/{id}/{typeid}")
+    public ModelAndView index(@PathVariable Integer id,@PathVariable Integer typeid) {
 //        List<Map<String,Object>> mapList = topicMapper.getAllTopicsByCategoryId(id);
         List<Category> categories = categoryMapper.selectAll();
 //        for (Map<String,Object> map:mapList) {
@@ -86,13 +88,17 @@ public class JieController {
 //            String stringDate = StringDate.getStringDate(create_time);
 //            map.put("create_time",stringDate);
 //        }
+        List<Map<String, Object>> allTopicsHot = topicMapper.getAllTopicsHot();
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("jie/index");
 //        modelAndView.addObject("topics",mapList);
         modelAndView.addObject("category",categories);
         modelAndView.addObject("categoryid",id);
+        modelAndView.addObject("typeid",typeid);
+        modelAndView.addObject("TopicsHot",allTopicsHot);
         return modelAndView;
     }
+//    跳转到发帖页
     @RequestMapping("/add")
     public ModelAndView add(){
         ModelAndView modelAndView=new ModelAndView();
@@ -101,6 +107,7 @@ public class JieController {
         modelAndView.addObject("categoryinfo",categories);
         return modelAndView;
     }
+//    进帖子详情页
     @RequestMapping("/detail/{titleid}")
     public ModelAndView detail(@PathVariable Integer titleid, HttpServletResponse response) throws IOException {
         ModelAndView modelAndView=new ModelAndView();
@@ -117,12 +124,15 @@ public class JieController {
         }
         Map<String, Object> topicinfo = topicMapper.gettopic(topic.getId());
         List<Category> categories = categoryMapper.selectAll();
+        List<Map<String, Object>> allTopicsHot = topicMapper.getAllTopicsHot();
         modelAndView.addObject("topic",topicinfo);
         modelAndView.addObject("createTime",time);
         modelAndView.addObject("commentlist",maps);
         modelAndView.addObject("category",categories);
+        modelAndView.addObject("TopicsHot",allTopicsHot);
         return modelAndView;
     }
+//    发表帖子
     @RequestMapping("/doadd")
     @ResponseBody
     @Transactional(rollbackFor=Exception.class)

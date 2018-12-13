@@ -8,6 +8,15 @@ public class PageInfo {
     int pageStart;
     int key;
     int type;
+    int category;
+
+    public int getCategor() {
+        return category;
+    }
+
+    public void setCategor(int category) {
+        this.category = category;
+    }
 
     public int getType() {
         return type;

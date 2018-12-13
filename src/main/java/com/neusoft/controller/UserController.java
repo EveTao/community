@@ -43,6 +43,7 @@ public class UserController {
     public String reg(){
         return "user/reg";
     }
+//    进入登录页面
     @RequestMapping("/login")
     public String login(HttpServletRequest request){
         HttpSession session=request.getSession();
@@ -52,9 +53,18 @@ public class UserController {
         }
         return "user/login";
     }
+//    进入用户中心
     @RequestMapping("index")
-    public String index(){
-        return "user/index";
+    public ModelAndView index(HttpServletRequest request){
+        HttpSession session=request.getSession();
+        User user = (User) session.getAttribute("userinfo");
+        List<Topic> topics = topicMapper.selectByUserid(user.getId());
+        ModelAndView modelAndView=new ModelAndView();
+        modelAndView.setViewName("user/index");
+        modelAndView.addObject("topics",topics);
+        int count = topicMapper.countByUserId(user.getId());
+        modelAndView.addObject("topicCount",count);
+        return modelAndView;
     }
     @RequestMapping("message")
     public String message(){
@@ -241,7 +251,6 @@ public class UserController {
         String time=fdate.format(user.getJoinTime());
         session.setAttribute("joinTime",time);
         List<Topic> topics = topicMapper.selectByUserid(user.getId());
-        modelAndView.addObject("topic",topics);
         //        獲取全部的評論
 //        List<Map<String, Object>> maps = commentMapper.selectByUserid(userid);
         //        獲取部分評論
@@ -251,6 +260,7 @@ public class UserController {
             String stringDate = StringDate.getStringDate(create_time);
             map.put("comment_time",stringDate);
         }
+        modelAndView.addObject("topic",topics);
         modelAndView.addObject("comment",maps);
         modelAndView.setViewName("user/home");
         return modelAndView;

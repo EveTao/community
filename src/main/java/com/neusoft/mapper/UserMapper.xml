@@ -15,10 +15,11 @@
         <result column="vip_grade" property="vipGrade" jdbcType="INTEGER" />
         <result column="kiss_num" property="kissNum" jdbcType="INTEGER" />
         <result column="join_time" property="joinTime" jdbcType="TIMESTAMP" />
+        <result column="is_admin" property="isAdmin" jdbcType="INTEGER" />
     </resultMap>
     <sql id="Base_Column_List" >
     id, email, nickname, passwd, city, sign, sex, pic_path, qq, weibo, vip_grade, kiss_num,
-    join_time
+    join_time,is_admin
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
         select

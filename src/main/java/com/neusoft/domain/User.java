@@ -29,6 +29,17 @@ public class User {
 
     private Date joinTime;
 
+    private Integer isAdmin;
+
+
+    public Integer getIsAdmin() {
+        return isAdmin;
+    }
+
+    public void setIsAdmin(Integer isAdmin) {
+        this.isAdmin = isAdmin;
+    }
+
     @Override
     public String toString() {
         return "User{" +
