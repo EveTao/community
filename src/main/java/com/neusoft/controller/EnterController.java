@@ -2,10 +2,12 @@ package com.neusoft.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.neusoft.domain.Category;
+import com.neusoft.domain.Comment;
 import com.neusoft.domain.PageInfo;
 import com.neusoft.mapper.CategoryMapper;
 import com.neusoft.mapper.CommentMapper;
 import com.neusoft.mapper.TopicMapper;
+import com.neusoft.util.Respons;
 import com.neusoft.util.StringDate;
 import org.omg.CORBA.PUBLIC_MEMBER;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +16,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.*;
 
@@ -69,5 +73,20 @@ public class EnterController {
         map.put("total",num);
         map.put("datas",mapList);
         response.getWriter().println(JSON.toJSONString(map));
+    }
+    @RequestMapping("message/remove")
+    public void getTopicPage(String id, HttpServletResponse response, HttpServletRequest request) throws IOException {
+        System.out.println(id);
+        Comment comment=new Comment();
+        comment.setId(Integer.parseInt(id));
+        Respons res=new Respons();
+        comment.setIsRemind(1);
+        int i = commentMapper.updateByPrimaryKeySelective(comment);
+        if(i>0){
+            res.setStatus(0);
+        }else {
+            res.setStatus(1);
+        }
+        response.getWriter().println(JSON.toJSONString(res));
     }
 }

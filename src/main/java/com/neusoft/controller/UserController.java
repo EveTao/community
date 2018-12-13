@@ -66,9 +66,21 @@ public class UserController {
         modelAndView.addObject("topicCount",count);
         return modelAndView;
     }
+//    进入我的消息页
     @RequestMapping("message")
-    public String message(){
-        return "user/message";
+    public ModelAndView message(HttpServletRequest request){
+        ModelAndView modelAndView=new ModelAndView();
+        modelAndView.setViewName("user/message");
+        HttpSession session=request.getSession();
+        User user =(User) session.getAttribute("userinfo");
+        List<Map<String, Object>> commentList = commentMapper.selectByUseridNew(user);
+        for (Map<String,Object> map:commentList) {
+            Date comment_time = (Date) map.get("comment_time");
+            String stringDate = StringDate.getStringDate(comment_time);
+            map.put("comment_time",stringDate);
+        }
+        modelAndView.addObject("commentList",commentList);
+        return modelAndView;
     }
     @RequestMapping("set")
     public String set(){

@@ -109,7 +109,7 @@
                 </fieldset>
                 <ul class="jieda" id="jieda">
                     <c:forEach var="com" items="${commentlist}">
-                    <li data-id="111" class="jieda-daan">
+                    <li data-id="${com.id}" class="jieda-daan">
                         <a name="item-1111111111"></a>
                         <div class="detail-about detail-about-reply">
                             <a class="fly-avatar" href="">
@@ -159,10 +159,12 @@
                 <i class="iconfont icon-svgmoban53"></i>
                 回复
               </span>
-                            <div class="jieda-admin">
-                                <span type="edit">编辑</span>
-                                <span type="del">删除</span>
-                                <!-- <span class="jieda-accept" type="accept">采纳</span> -->
+                            <div class="jieda-admin" >
+                                <c:if test="${topic.is_end==0}">
+                                    <c:if test="${com.is_choose==0}">
+                                        <span class="jieda-accept" type="accept">采纳</span>
+                                    </c:if>
+                                </c:if>
                             </div>
                         </div>
                     </li>

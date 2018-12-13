@@ -116,8 +116,8 @@ public class JieController {
         String time=StringDate.getStringDate(topic.getCreateTime());
         topic.setViewTimes(topic.getViewTimes()+1);
         topicMapper.updateByPrimaryKey(topic);
-        List<Map<String, Object>> maps = commentMapper.selectByTopicid(topic.getId());
-        for (Map<String,Object> map:maps) {
+        List<Map<String, Object>> commentMaps = commentMapper.selectByTopicid(topic.getId());
+        for (Map<String,Object> map:commentMaps) {
             Date create_time = (Date) map.get("comment_time");
             String stringDate = StringDate.getStringDate(create_time);
             map.put("comment_time",stringDate);
@@ -127,7 +127,7 @@ public class JieController {
         List<Map<String, Object>> allTopicsHot = topicMapper.getAllTopicsHot();
         modelAndView.addObject("topic",topicinfo);
         modelAndView.addObject("createTime",time);
-        modelAndView.addObject("commentlist",maps);
+        modelAndView.addObject("commentlist",commentMaps);
         modelAndView.addObject("category",categories);
         modelAndView.addObject("TopicsHot",allTopicsHot);
         return modelAndView;

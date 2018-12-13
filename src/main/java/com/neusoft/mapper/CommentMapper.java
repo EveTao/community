@@ -2,6 +2,7 @@ package com.neusoft.mapper;
 
 import com.neusoft.domain.Comment;
 import com.neusoft.domain.PageInfo;
+import com.neusoft.domain.User;
 
 import java.util.List;
 import java.util.Map;
@@ -30,5 +31,7 @@ public interface CommentMapper {
     List<Map<String,Object>> selectByUseridPart(Integer userid);
 
     List<Map<String,Object>> selectTop();
+
+    List<Map<String,Object>> selectByUseridNew(User user);
 
 }

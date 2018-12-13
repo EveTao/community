@@ -17,6 +17,16 @@ public class Comment {
 
     private Date commentTime;
 
+    private Integer isRemind;
+
+    public Integer getIsRemind() {
+        return isRemind;
+    }
+
+    public void setIsRemind(Integer isRemind) {
+        this.isRemind = isRemind;
+    }
+
     public Integer getId() {
         return id;
     }
