@@ -33,9 +33,14 @@
                 <div class="fly-detail-info">
                     <!-- <span class="layui-badge">审核中</span> -->
                     <span class="layui-badge layui-bg-green fly-detail-column">${topic.name}</span>
-
-                    <span class="layui-badge" style="background-color: #999;">未结</span>
-                    <!-- <span class="layui-badge" style="background-color: #5FB878;">已结</span> -->
+                    <c:choose>
+                        <c:when test="${topic.is_end==0 }">
+                            <span class="layui-badge" style="background-color: #999;">未结</span>
+                        </c:when>
+                        <c:otherwise>
+                            <span class="layui-badge" style="background-color: #5FB878;">已结</span>
+                        </c:otherwise>
+                    </c:choose>
                     <c:if test="${topic.is_top==1}">
                         <span class="layui-badge layui-bg-black">置顶</span>
                     </c:if>
@@ -88,11 +93,11 @@
                         </a>
                         <span>${createTime}</span>
                     </div>
-                    <div class="detail-hits" id="LAY_jieAdmin" data-id="123">
+                    <div class="detail-hits" id="LAY_jieAdmin" data-id="${topic.id}">
                         <span style="padding-right: 10px; color: #FF7200">悬赏：${topic.kiss_num}飞吻</span>
                         <c:if test="${!empty userinfo}">
-                            <c:if test="${userinfo.id == topic.userid}">
-                                <span class="layui-btn layui-btn-xs jie-admin" type="edit"><a href="add.html">编辑此贴</a></span>
+                            <c:if test="${userinfo.id == topic.userid and topic.is_end==0}">
+                                <span class="layui-btn layui-btn-xs jie-admin" type="edit"><a href="${pageContext.request.contextPath}/jie/add/${topic.id}">编辑此贴</a></span>
                             </c:if>
                         </c:if>
 
@@ -112,7 +117,7 @@
                     <li data-id="${com.id}" class="jieda-daan">
                         <a name="item-1111111111"></a>
                         <div class="detail-about detail-about-reply">
-                            <a class="fly-avatar" href="">
+                            <a class="fly-avatar" href="${pageContext.request.contextPath}/user/home/${com.user_id}">
                                 <c:choose>
                                     <c:when test="${com.pic_path==''}">
                                         <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg" alt=" ">
@@ -130,7 +135,7 @@
                                     <i class="layui-badge fly-badge-vip">VIP${com.vip_grade}</i>
                                     </c:if>
                                 </a>
-                                <c:if test="${com.userId==topic.userid}">
+                                <c:if test="${com.user_id==topic.userid}">
                                     <span>(楼主)</span>
                                 </c:if>
                                 <!--
@@ -151,19 +156,26 @@
                             ${com.comment_content}
                         </div>
                         <div class="jieda-reply">
-              <span class="jieda-zan zanok" type="zan">
-                <i class="iconfont icon-zan"></i>
-                <em>${com.like_num}</em>
-              </span>
+                            <%--没有zanok小手就是灰色的，代表没有点过赞，点击一下变红，赞数加1 --%>
+                                <%--<span class="jieda-zan zanok" type="zan">--%>
+                             <c:choose>
+                                 <c:when test="${com.isagree==0}">
+                                    <span class="jieda-zan " type="zan">
+                                 </c:when>
+                                        <c:otherwise>
+                                     <span class="jieda-zan zanok" type="zan">
+                                     </c:otherwise>
+                             </c:choose>
+                                    <i class="iconfont icon-zan"></i>
+                                    <em>${com.like_num}</em>
+                                </span>
                             <span type="reply">
                 <i class="iconfont icon-svgmoban53"></i>
                 回复
               </span>
                             <div class="jieda-admin" >
-                                <c:if test="${topic.is_end==0}">
-                                    <c:if test="${com.is_choose==0}">
-                                        <span class="jieda-accept" type="accept">采纳</span>
-                                    </c:if>
+                                <c:if test="${topic.userid==userinfo.id and topic.is_end==0 and com.is_choose==0 and com.user_id!=topic.userid}">
+                                    <span class="jieda-accept" type="accept">采纳</span>
                                 </c:if>
                             </div>
                         </div>

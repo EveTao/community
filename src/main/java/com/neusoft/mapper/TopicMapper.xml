@@ -253,7 +253,7 @@ join tab_topic_category on tab_topic.topic_category_id = tab_topic_category.id
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="count" resultType="java.lang.Integer"  >
-    select count(id) from tab_topic where tab_topic.is_delete=0
+    select count(id) from tab_topic where tab_topigettopicc.is_delete=0
   </select>
   <select id="countByUserId" resultType="java.lang.Integer" parameterType="java.lang.Integer" >
     select count(id) from tab_topic where tab_topic.userid=#{userId}

@@ -69,11 +69,11 @@
                                     <cite>${comment.nickname}</cite>
                                 </a>回答了您的求解
                                 <a target="_blank" href="${pageContext.request.contextPath}/jie/detail/${comment.id}">
-                                <cite>layui后台框架</cite>
+                                <cite>${comment.title}</cite>
                             </a>
                             </blockquote>
                             <p><span>${comment.comment_time}</span>
-                                <a href="${comment.commentid}" class="layui-btn layui-btn-small layui-btn-danger fly-delete">删除</a>
+                                <a href="javascript:;" class="layui-btn layui-btn-small layui-btn-danger fly-delete">删除</a>
                             </p>
                         </li>
                     </c:forEach>

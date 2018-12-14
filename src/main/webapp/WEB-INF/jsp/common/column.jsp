@@ -2,7 +2,11 @@
 <div class="fly-panel fly-column">
     <div class="layui-container">
         <ul class="layui-clear">
-            <li class="layui-hide-xs"><a href="/">首页</a></li>
+            <li
+            <c:if test="${categoryid==0}">
+                     class="layui-hide-xs layui-this"
+            </c:if>
+            ><a href="/">首页</a></li>
             <c:forEach items="${category}" var="cate">
                 <c:choose>
                     <c:when test="${cate.id==categoryid }">
@@ -33,10 +37,10 @@
 
         <div class="fly-column-right layui-hide-xs">
             <span class="fly-search"><i class="layui-icon"></i></span>
-            <a href="${pageContext.request.contextPath}/jie/add" class="layui-btn">发表新帖</a>
+            <a href="${pageContext.request.contextPath}/jie/add/0" class="layui-btn">发表新帖</a>
         </div>
         <div class="layui-hide-sm layui-show-xs-block" style="margin-top: -10px; padding-bottom: 10px; text-align: center;">
-            <a href="${pageContext.request.contextPath}/jie/add" class="layui-btn">发表新帖</a>
+            <a href="${pageContext.request.contextPath}/jie/add/0" class="layui-btn">发表新帖</a>
         </div>
     </div>
 </div>

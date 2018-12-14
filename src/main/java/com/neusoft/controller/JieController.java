@@ -29,6 +29,7 @@ import java.awt.image.VolatileImage;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -55,6 +56,7 @@ public class JieController {
             User user=(User)obj;
             comment.setUserId(user.getId());
             comment.setCommentTime(new Date());
+            comment.setIsRemind(0);
             int i = commentMapper.insertSelective(comment);
             Topic topic;
             if (i > 0) {
@@ -99,28 +101,40 @@ public class JieController {
         return modelAndView;
     }
 //    跳转到发帖页
-    @RequestMapping("/add")
-    public ModelAndView add(){
+    @RequestMapping("/add/{topicid}")
+    public ModelAndView add(@PathVariable Integer topicid){
         ModelAndView modelAndView=new ModelAndView();
         List<Category> categories = categoryMapper.selectAll();
         modelAndView.setViewName("jie/add");
         modelAndView.addObject("categoryinfo",categories);
+        if(topicid!=0){
+            Topic topic = topicMapper.selectByPrimaryKey(topicid);
+            modelAndView.addObject("topic",topic);
+        }
         return modelAndView;
     }
 //    进帖子详情页
     @RequestMapping("/detail/{titleid}")
-    public ModelAndView detail(@PathVariable Integer titleid, HttpServletResponse response) throws IOException {
+    public ModelAndView detail(@PathVariable Integer titleid, HttpSession session) throws IOException {
         ModelAndView modelAndView=new ModelAndView();
         modelAndView.setViewName("jie/detail");
         Topic topic = topicMapper.selectByPrimaryKey(titleid);
         String time=StringDate.getStringDate(topic.getCreateTime());
         topic.setViewTimes(topic.getViewTimes()+1);
         topicMapper.updateByPrimaryKey(topic);
-        List<Map<String, Object>> commentMaps = commentMapper.selectByTopicid(topic.getId());
-        for (Map<String,Object> map:commentMaps) {
-            Date create_time = (Date) map.get("comment_time");
+        Map<String,Object> map=new HashMap<>();
+        map.put("topicid",titleid);
+        User user =(User) session.getAttribute("userinfo");
+        if(user!=null){
+            map.put("userid",user.getId());
+        }else {
+            map.put("userid",0);
+        }
+        List<Map<String, Object>> commentMaps = commentMapper.selectByTopicid(map);
+        for (Map<String,Object> m:commentMaps) {
+            Date create_time = (Date) m.get("comment_time");
             String stringDate = StringDate.getStringDate(create_time);
-            map.put("comment_time",stringDate);
+            m.put("comment_time",stringDate);
         }
         Map<String, Object> topicinfo = topicMapper.gettopic(topic.getId());
         List<Category> categories = categoryMapper.selectAll();
@@ -138,23 +152,39 @@ public class JieController {
     @Transactional(rollbackFor=Exception.class)
     public Respons doadd(Topic topic, HttpServletRequest request){
         Respons respons=new Respons();
-        System.out.println(topic);
-        HttpSession session=request.getSession();
-        User user=(User) session.getAttribute("userinfo");
-        topic.setUserid(user.getId());
-        topic.setCreateTime(new Date());
-        int i = topicMapper.insertSelective(topic);
-        User user1=userMapper.selectByPrimaryKey(user.getId());
-        user1.setKissNum(user1.getKissNum()-topic.getKissNum());
-        userMapper.updateByPrimaryKeySelective(user1);
-        User user2=userMapper.selectByPrimaryKey(user.getId());
-        session.setAttribute("userinfo",user2);
-        if(i>0){
-            respons.setStatus(0);
-            respons.setAction(request.getServletContext().getContextPath() +"/");
+//        System.out.println(topic);
+        if(topic.getId()==0){
+            HttpSession session=request.getSession();
+            User user=(User) session.getAttribute("userinfo");
+            if(user.getKissNum()>topic.getKissNum()){
+                topic.setUserid(user.getId());
+                topic.setCreateTime(new Date());
+                int i = topicMapper.insertSelective(topic);
+                User user1=userMapper.selectByPrimaryKey(user.getId());
+                user1.setKissNum(user1.getKissNum()-topic.getKissNum());
+                userMapper.updateByPrimaryKeySelective(user1);
+                User user2=userMapper.selectByPrimaryKey(user.getId());
+                session.setAttribute("userinfo",user2);
+                if(i>0){
+                    respons.setStatus(0);
+                    respons.setAction(request.getServletContext().getContextPath() +"/");
+                }else {
+                    respons.setStatus(1);
+                }
+            }else {
+                respons.setStatus(1);
+                respons.setMsg("飞吻数不够");
+            }
         }else {
-            respons.setStatus(1);
+            int i = topicMapper.updateByPrimaryKeySelective(topic);
+            if(i>0){
+                respons.setStatus(0);
+                respons.setAction(request.getServletContext().getContextPath() +"/");
+            }else {
+                respons.setStatus(1);
+            }
         }
+
         return respons;
     }
 }

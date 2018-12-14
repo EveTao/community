@@ -49,71 +49,59 @@
                                 <div class="layui-col-md3">
                                     <label class="layui-form-label">所在专栏</label>
                                     <div class="layui-input-block">
-                                        <select lay-verify="required" name="topicCategoryId" lay-filter="column">
-                                            <option></option>categoryinfo
+                                        <select lay-verify="required" name="topicCategoryId" lay-filter="column"
+                                                <c:if test="${topic.id>0}">
+                                                    disabled
+                                                </c:if>
+                                                >
                                             <c:forEach items="${categoryinfo}" var="cate">
-                                                <option value="${cate.id}">${cate.name}</option>
+                                                <c:choose>
+                                                    <c:when test="${cate.id==topic.topicCategoryId} ">
+                                                        <option value="${cate.id}" selected>${cate.name}</option>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <option value="${cate.id}">${cate.name}</option>
+                                                    </c:otherwise>
+                                                </c:choose>
                                             </c:forEach>
-                                            <%--<option value="1">提问</option>
-                                            <option value="2">分享</option>
-                                            <option value="3">讨论</option>
-                                            <option value="4">建议</option>
-                                            <option value="5">公告</option>
-                                            <option value="6">动态</option>--%>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="layui-col-md9">
                                     <label for="L_title" class="layui-form-label">标题</label>
                                     <div class="layui-input-block">
-                                        <input type="text" id="L_title" name="title" required lay-verify="required" autocomplete="off" class="layui-input">
-                                        <!-- <input type="hidden" name="id" value="{{d.edit.id}}"> -->
+                                        <input type="text" id="L_title" name="title" required lay-verify="required" autocomplete="off" class="layui-input" value="${topic.title}">
+                                            <input type="hidden" name="id" value="${topic.id}">
                                     </div>
                                 </div>
                             </div>
-                            <%--<div class="layui-row layui-col-space15 layui-form-item layui-hide" id="LAY_quiz">--%>
-                                <%--<div class="layui-col-md3">--%>
-                                    <%--<label class="layui-form-label">所属产品</label>--%>
-                                    <%--<div class="layui-input-block">--%>
-                                        <%--<select name="project">--%>
-                                            <%--<option></option>--%>
-                                            <%--<option value="layui">layui</option>--%>
-                                            <%--<option value="独立版layer">独立版layer</option>--%>
-                                            <%--<option value="独立版layDate">独立版layDate</option>--%>
-                                            <%--<option value="LayIM">LayIM</option>--%>
-                                            <%--<option value="Fly社区模板">Fly社区模板</option>--%>
-                                        <%--</select>--%>
-                                    <%--</div>--%>
-                                <%--</div>--%>
-                                <%--<div class="layui-col-md3">--%>
-                                    <%--<label class="layui-form-label" for="L_version">版本号</label>--%>
-                                    <%--<div class="layui-input-block">--%>
-                                        <%--<input type="text" id="L_version" value="" name="version" autocomplete="off" class="layui-input">--%>
-                                    <%--</div>--%>
-                                <%--</div>--%>
-                                <%--<div class="layui-col-md6">--%>
-                                    <%--<label class="layui-form-label" for="L_browser">浏览器</label>--%>
-                                    <%--<div class="layui-input-block">--%>
-                                        <%--<input type="text" id="L_browser"  value="" name="browser" placeholder="浏览器名称及版本，如：IE 11" autocomplete="off" class="layui-input">--%>
-                                    <%--</div>--%>
-                                <%--</div>--%>
-                            <%--</div>--%>
                             <div class="layui-form-item layui-form-text">
                                 <div class="layui-input-block">
-                                    <textarea id="L_content" name="content" required lay-verify="required" placeholder="详细描述" class="layui-textarea fly-editor" style="height: 260px;"></textarea>
+                                    <textarea id="L_content" name="content" required lay-verify="required" placeholder="详细描述" class="layui-textarea fly-editor" style="height: 260px;" >${topic.content}</textarea>
                                 </div>
                             </div>
                             <div class="layui-form-item">
                                 <div class="layui-inline">
                                     <label class="layui-form-label">悬赏飞吻</label>
                                     <div class="layui-input-inline" style="width: 190px;">
-                                        <select name="kissNum">
-                                            <option value="20">20</option>
-                                            <option value="30">30</option>
-                                            <option value="50">50</option>
-                                            <option value="60">60</option>
-                                            <option value="80">80</option>
-                                        </select>
+                                        <c:choose>
+                                            <c:when test="${empty topic}">
+                                            <select name="kissNum" id="kisnum">
+                                                <option value="20">20</option>
+                                                <option value="30">30</option>
+                                                <option value="50">50</option>
+                                                <option value="60">60</option>
+                                                <option value="80">80</option>
+                                            </select>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <select name="kissNum" id="kisnum" disabled>
+                                                    <option value="${topic.kissNum}">${topic.kissNum}</option>
+                                                </select>
+                                            </c:otherwise>
+                                        </c:choose>
+
+
                                     </div>
                                     <div class="layui-form-mid layui-word-aux">发表后无法更改飞吻</div>
                                 </div>
@@ -165,7 +153,9 @@
         ,base: '${pageContext.request.contextPath}/res/mods/'
     }).extend({
         fly: 'index'
-    }).use('fly');
+    }).use('fly',function () {
+        
+    });
 </script>
 
 </body>

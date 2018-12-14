@@ -20,7 +20,7 @@ public interface CommentMapper {
 
     int updateByPrimaryKey(Comment record);
 
-    List<Map<String,Object>> selectByTopicid(Integer topicid);
+    List<Map<String,Object>> selectByTopicid(Map<String,Object> map);
 
     List<Map<String,Object>> selectByUserid(Integer userid);
 
