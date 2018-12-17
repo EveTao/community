@@ -60,31 +60,48 @@
         <div class="layui-tab layui-tab-brief" lay-filter="user" id="LAY_msg" style="margin-top: 15px;">
             <button class="layui-btn layui-btn-danger" id="LAY_delallmsg">清空全部消息</button>
             <div  id="LAY_minemsg" style="margin-top: 10px;">
-                <!--<div class="fly-none">您暂时没有最新消息</div>-->
-                <ul class="mine-msg">
-                    <c:forEach items="${commentList}" var="comment">
-                        <li data-id="${comment.commentid}">
-                            <blockquote class="layui-elem-quote">
-                                <a href="${pageContext.request.contextPath}/user/home/${comment.user_id}" target="_blank">
-                                    <cite>${comment.nickname}</cite>
-                                </a>回答了您的求解
-                                <a target="_blank" href="${pageContext.request.contextPath}/jie/detail/${comment.id}">
-                                <cite>${comment.title}</cite>
-                            </a>
-                            </blockquote>
-                            <p><span>${comment.comment_time}</span>
-                                <a href="javascript:;" class="layui-btn layui-btn-small layui-btn-danger fly-delete">删除</a>
-                            </p>
-                        </li>
-                    </c:forEach>
+                <c:choose>
+                    <c:when test="${empty commentList}">
+                        <div class="fly-none">您暂时没有最新消息</div>
+                    </c:when>
+                    <c:otherwise>
+                        <ul class="mine-msg">
+                            <c:forEach items="${commentList}" var="comment">
+                                <li data-id="${comment.commentid}">
+                                    <blockquote class="layui-elem-quote">
+                                        <a href="${pageContext.request.contextPath}/user/home/${comment.user_id}" target="_blank">
+                                            <cite>${comment.nickname}</cite>
+                                        </a>
+                                        <c:choose>
+                                            <c:when test="${comment.msgtype==0}">
+                                                回答了您的求解
+                                                <a target="_blank" href="${pageContext.request.contextPath}/jie/detail/${comment.id}">
+                                                    <cite>${comment.title}</cite>
+                                                </a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                在求解<a target="_blank" href="${pageContext.request.contextPath}/jie/detail/${comment.id}">
+                                        <cite>${comment.title}</cite>中回复了你
+                                            </c:otherwise>
+                                        </c:choose>
 
-                    <%--<li data-id="123">
-                        <blockquote class="layui-elem-quote">
-                            系统消息：欢迎使用 layui
-                        </blockquote>
-                        <p><span>1小时前</span><a href="javascript:;" class="layui-btn layui-btn-small layui-btn-danger fly-delete">删除</a></p>
-                    </li>--%>
-                </ul>
+                                    </blockquote>
+                                    <p><span>${comment.comment_time}</span>
+                                        <a href="javascript:;" class="layui-btn layui-btn-small layui-btn-danger fly-delete">删除</a>
+                                    </p>
+                                </li>
+                            </c:forEach>
+
+                                <%--<li data-id="123">
+                                    <blockquote class="layui-elem-quote">
+                                        系统消息：欢迎使用 layui
+                                    </blockquote>
+                                    <p><span>1小时前</span><a href="javascript:;" class="layui-btn layui-btn-small layui-btn-danger fly-delete">删除</a></p>
+                                </li>--%>
+                        </ul>
+                    </c:otherwise>
+                </c:choose>
+
             </div>
         </div>
     </div>
@@ -121,3 +138,16 @@
 
 </body>
 </html>
+
+
+
+} else {
+<ul class="mine-msg">
+     for(var i = 0; i < len; i++){
+    <li data-id="{{d.rows[i].id}}">
+        <blockquote class="layui-elem-quote">{{ d.rows[i].content}}</blockquote>\
+        <p><span>{{d.rows[i].time}}</span><a href="javascript:;" class="layui-btn layui-btn-sm layui-btn-danger fly-delete">删除</a></p>\
+    </li>
+     }
+</ul>
+ }

@@ -117,7 +117,7 @@
                     <li data-id="${com.id}" class="jieda-daan">
                         <a name="item-1111111111"></a>
                         <div class="detail-about detail-about-reply">
-                            <a class="fly-avatar" href="${pageContext.request.contextPath}/user/home/${com.user_id}">
+                            <a class="fly-avatar" href="${pageContext.request.contextPath}/user/home/${com.userid}">
                                 <c:choose>
                                     <c:when test="${com.pic_path==''}">
                                         <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg" alt=" ">

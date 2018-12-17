@@ -8,6 +8,7 @@ import com.neusoft.domain.User;
 import com.neusoft.mapper.CategoryMapper;
 import com.neusoft.mapper.CommentMapper;
 import com.neusoft.mapper.TopicMapper;
+import com.neusoft.mapper.UserMapper;
 import com.neusoft.util.Respons;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,6 +34,8 @@ public class ApiController {
     CategoryMapper categoryMapper;
     @Autowired
     CommentMapper commentMapper;
+    @Autowired
+    UserMapper userMapper;
 
     @RequestMapping("jie-set")
     public void setTopic(Integer id, Integer rank, String field, HttpServletResponse response, HttpServletRequest request) throws IOException {
@@ -61,7 +64,7 @@ public class ApiController {
         Respons res=new Respons();
         if(i>0){
             res.setStatus(0);
-            res.setAction("/");
+//            res.setAction("/");
         }else {
             res.setStatus(1);
         }
@@ -81,7 +84,12 @@ public class ApiController {
             topic.setId(comment.getTopicId());
             topic.setIsEnd(1);
             int i = topicMapper.updateByPrimaryKeySelective(topic);
-            if(i>0){
+            topic.getKissNum();
+            User user = userMapper.selectByPrimaryKey(comment.getUserId());
+            int kissnum=user.getKissNum()+topic.getKissNum();
+            user.setKissNum(kissnum);
+            int i2 = userMapper.updateByPrimaryKeySelective(user);
+            if(i>0 && i2>0){
                 res.setStatus(0);
             }else {
                 res.setStatus(1);

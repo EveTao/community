@@ -43,6 +43,24 @@
                     }
                 })
             })
+            $('#L_username').blur(function () {
+                var pwd=$('#L_username').val();
+                $.get({
+                    url:'${pageContext.request.contextPath}/user/checkNickname/',
+                    data:{nickname:pwd},
+                    dataType:'json',
+                    success:function (res) {
+                        // alert(res.msg);
+                        $('#L_nickname_msg').text(res.msg);
+                        if(res.status!=0){
+                            $('#L_username').val('');
+                        }
+                    },
+                    error:function (err) {
+                        console.log(err)
+                    }
+                })
+            });
            $('#L_repass').blur(function () {
                 var pwd=$('#L_pass').val();
                 if($(this).val()!=pwd){
@@ -90,6 +108,7 @@
                                 <div class="layui-input-inline">
                                     <input type="text" id="L_username" name="nickname" required lay-verify="required" autocomplete="off" class="layui-input">
                                 </div>
+                                <div class="layui-form-mid layui-word-aux" id="L_nickname_msg"></div>
                             </div>
                             <div class="layui-form-item">
                                 <label for="L_pass" class="layui-form-label">密码</label>

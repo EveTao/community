@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.neusoft.domain.Category;
 import com.neusoft.domain.Comment;
 import com.neusoft.domain.PageInfo;
+import com.neusoft.domain.User;
 import com.neusoft.mapper.CategoryMapper;
 import com.neusoft.mapper.CommentMapper;
 import com.neusoft.mapper.TopicMapper;
@@ -75,17 +76,27 @@ public class EnterController {
         response.getWriter().println(JSON.toJSONString(map));
     }
     @RequestMapping("message/remove")
-    public void getTopicPage(String id, HttpServletResponse response, HttpServletRequest request) throws IOException {
-        System.out.println(id);
-        Comment comment=new Comment();
-        comment.setId(Integer.parseInt(id));
+    public void getTopicPage(String id,boolean all, HttpServletResponse response, HttpSession session) throws IOException {
+//        System.out.println(id);
         Respons res=new Respons();
-        comment.setIsRemind(1);
-        int i = commentMapper.updateByPrimaryKeySelective(comment);
-        if(i>0){
-            res.setStatus(0);
+        Comment comment=new Comment();
+        User user =(User) session.getAttribute("userinfo");
+        if(all){
+            int i = commentMapper.updateIsRemindAll(user);
+            if(i>0){
+                res.setStatus(0);
+            }else {
+                res.setStatus(1);
+            }
         }else {
-            res.setStatus(1);
+            comment.setId(Integer.parseInt(id));
+            comment.setIsRemind(1);
+            int i = commentMapper.updateByPrimaryKeySelective(comment);
+            if(i>0){
+                res.setStatus(0);
+            }else {
+                res.setStatus(1);
+            }
         }
         response.getWriter().println(JSON.toJSONString(res));
     }

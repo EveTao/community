@@ -1,5 +1,6 @@
 package com.neusoft.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.neusoft.domain.PageInfo;
 import com.neusoft.domain.Topic;
 import com.neusoft.domain.User;
@@ -287,4 +288,19 @@ public class UserController {
         modelAndView.setViewName("user/home/"+user.getId());
         return modelAndView;
     }
+//    检查用户昵称是否已存在
+    @RequestMapping("checkNickname")
+    public void checkNickname(String nickname,HttpServletResponse response) throws IOException {
+        Respons respons=new Respons();
+        User user = userMapper.selectByNickname(nickname);
+        if(user==null){
+            respons.setStatus(0);
+            respons.setMsg("该用户名可以使用");
+        }else {
+            respons.setStatus(1);
+            respons.setMsg("该用户名已存在，请重新输入");
+        }
+        response.getWriter().println(JSON.toJSONString(respons));
+    }
+
 }

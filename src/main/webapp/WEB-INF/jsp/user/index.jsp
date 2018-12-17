@@ -74,7 +74,7 @@
                             <li>
                                 <a class="jie-title" href="${pageContext.request.contextPath}/jie/detail/${topic.id}" target="_blank">${topic.title}</a>
                                 <i>${topic.createTime}</i>
-                                <a class="mine-edit" href="${pageContext.request.contextPath}/jie/edit/${topic.id}">编辑</a>
+                                <a class="mine-edit" href="${pageContext.request.contextPath}/jie/add/${topic.id}">编辑</a>
                                 <em>${topic.viewTimes}阅/${topic.commentNum}答</em>
                             </li>
                         </c:forEach>
