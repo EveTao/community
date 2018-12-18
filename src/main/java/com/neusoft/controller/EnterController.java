@@ -1,11 +1,9 @@
 package com.neusoft.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.neusoft.domain.Category;
-import com.neusoft.domain.Comment;
-import com.neusoft.domain.PageInfo;
-import com.neusoft.domain.User;
+import com.neusoft.domain.*;
 import com.neusoft.mapper.CategoryMapper;
+import com.neusoft.mapper.CollectMapper;
 import com.neusoft.mapper.CommentMapper;
 import com.neusoft.mapper.TopicMapper;
 import com.neusoft.util.Respons;
@@ -31,6 +29,8 @@ public class EnterController {
     CategoryMapper categoryMapper;
     @Autowired
     CommentMapper commentMapper;
+    @Autowired
+    CollectMapper collectMapper;
 //    进入首页
     @RequestMapping("/")
     public ModelAndView index()
@@ -59,45 +59,5 @@ public class EnterController {
         modelAndView.addObject("typeid",0);
         modelAndView.addObject("TopicsHot",allTopicsHot);
         return modelAndView;
-    }
-//    取得帖子的翻页内容
-    @RequestMapping("getTopicPage")
-    public void getTopicPage(PageInfo pageInfo, HttpServletResponse response) throws IOException {
-        int num=topicMapper.countByCategoryId(pageInfo);
-        List<Map<String,Object>> mapList = topicMapper.getAllTopicsByPage(pageInfo);
-        for (Map<String,Object> map:mapList) {
-            Date create_time = (Date) map.get("create_time");
-            String stringDate = StringDate.getStringDate(create_time);
-            map.put("create_time",stringDate);
-        }
-        Map<String,Object> map = new HashMap<>();
-        map.put("total",num);
-        map.put("datas",mapList);
-        response.getWriter().println(JSON.toJSONString(map));
-    }
-    @RequestMapping("message/remove")
-    public void getTopicPage(String id,boolean all, HttpServletResponse response, HttpSession session) throws IOException {
-//        System.out.println(id);
-        Respons res=new Respons();
-        Comment comment=new Comment();
-        User user =(User) session.getAttribute("userinfo");
-        if(all){
-            int i = commentMapper.updateIsRemindAll(user);
-            if(i>0){
-                res.setStatus(0);
-            }else {
-                res.setStatus(1);
-            }
-        }else {
-            comment.setId(Integer.parseInt(id));
-            comment.setIsRemind(1);
-            int i = commentMapper.updateByPrimaryKeySelective(comment);
-            if(i>0){
-                res.setStatus(0);
-            }else {
-                res.setStatus(1);
-            }
-        }
-        response.getWriter().println(JSON.toJSONString(res));
     }
 }

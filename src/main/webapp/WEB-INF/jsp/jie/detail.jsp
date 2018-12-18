@@ -96,9 +96,19 @@
                     <div class="detail-hits" id="LAY_jieAdmin" data-id="${topic.id}">
                         <span style="padding-right: 10px; color: #FF7200">悬赏：${topic.kiss_num}飞吻</span>
                         <c:if test="${!empty userinfo}">
-                            <c:if test="${userinfo.id == topic.userid and topic.is_end==0}">
-                                <span class="layui-btn layui-btn-xs jie-admin" type="edit"><a href="${pageContext.request.contextPath}/jie/add/${topic.id}">编辑此贴</a></span>
-                            </c:if>
+                            <c:choose>
+                                <c:when test="${userinfo.id == topic.userid and topic.is_end==0}">
+                                    <span class="layui-btn layui-btn-xs jie-admin" type="edit"><a href="${pageContext.request.contextPath}/jie/add/${topic.id}">编辑此贴</a></span>
+                                </c:when>
+                                <c:otherwise>
+                                    <c:if test="${collect==0}">
+                                        <span class="layui-btn layui-btn-xs jie-admin " type="collect" data-type="add">收藏</span>
+                                    </c:if>
+                                    <c:if test="${collect==1}">
+                                        <span class="layui-btn layui-btn-xs jie-admin  layui-btn-danger" type="collect" data-type="add">取消收藏</span>
+                                    </c:if>
+                                </c:otherwise>
+                            </c:choose>
                         </c:if>
 
                     </div>

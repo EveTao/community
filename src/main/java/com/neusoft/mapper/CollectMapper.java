@@ -14,4 +14,8 @@ public interface CollectMapper {
     int updateByPrimaryKeySelective(Collect record);
 
     int updateByPrimaryKey(Collect record);
+
+    Collect findByUserTopic(Collect record);
+
+    int deleteByUserTopic(Collect record);
 }

@@ -2,14 +2,8 @@ package com.neusoft.controller;
 
 
 import com.alibaba.fastjson.JSON;
-import com.neusoft.domain.Category;
-import com.neusoft.domain.Comment;
-import com.neusoft.domain.Topic;
-import com.neusoft.domain.User;
-import com.neusoft.mapper.CategoryMapper;
-import com.neusoft.mapper.CommentMapper;
-import com.neusoft.mapper.TopicMapper;
-import com.neusoft.mapper.UserMapper;
+import com.neusoft.domain.*;
+import com.neusoft.mapper.*;
 import com.neusoft.util.Page;
 import com.neusoft.util.Respons;
 import com.neusoft.util.StringDate;
@@ -44,6 +38,8 @@ public class JieController {
     UserMapper userMapper;
     @Autowired
     CommentMapper commentMapper;
+    @Autowired
+    CollectMapper collectMapper;
 
 //    回帖
     @RequestMapping("/reply")
@@ -125,8 +121,16 @@ public class JieController {
         Map<String,Object> map=new HashMap<>();
         map.put("topicid",titleid);
         User user =(User) session.getAttribute("userinfo");
+        int i=0;
         if(user!=null){
             map.put("userid",user.getId());
+            Collect collect =new Collect();
+            collect.setUserId(user.getId());
+            collect.setTopicId(titleid);
+            collect = collectMapper.findByUserTopic(collect);
+            if(collect!=null){
+                i=1;
+            }
         }else {
             map.put("userid",0);
         }
@@ -144,6 +148,7 @@ public class JieController {
         modelAndView.addObject("commentlist",commentMaps);
         modelAndView.addObject("category",categories);
         modelAndView.addObject("TopicsHot",allTopicsHot);
+        modelAndView.addObject("collect",i);
         return modelAndView;
     }
 //    发表帖子
