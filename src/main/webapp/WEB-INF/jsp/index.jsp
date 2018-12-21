@@ -134,13 +134,16 @@
                     <span class="fly-signin-days">已连续签到<cite>16</cite>天</span>
                 </div>
                 <div class="fly-panel-main fly-signin-main">
-                    <button class="layui-btn layui-btn-danger" id="LAY_signin">今日签到</button>
-                    <span>可获得<cite>5</cite>飞吻</span>
-                    <!-- 已签到状态 -->
-                    <!--
-                    <button class="layui-btn layui-btn-disabled">今日已签到</button>
-                    <span>获得了<cite>20</cite>飞吻</span>
-                    -->
+                    <c:choose>
+                        <c:when test="${countToday==0}">
+                            <button class="layui-btn layui-btn-danger" id="LAY_signin">今日签到</button>
+                            <span>可获得<cite>5</cite>飞吻</span>
+                        </c:when>
+                        <c:otherwise>
+                            <button class="layui-btn layui-btn-disabled">今日已签到</button>
+                            <span>获得了<cite>20</cite>飞吻</span>
+                        </c:otherwise>
+                    </c:choose>
                 </div>
             </div>
 
@@ -217,13 +220,7 @@
 <script src="${pageContext.request.contextPath}/res/layui/layui.js"></script>
 <script>
     layui.cache.page = '';
-    layui.cache.user = {
-        username: '游客'
-        ,uid: -1
-        ,avatar: '${pageContext.request.contextPath}/res/images/avatar/00.jpg'
-        ,experience: 83
-        ,sex: '男'
-    };
+    <%@include file="common/cache-user.jsp"%>
     layui.config({
         version: "3.0.0"
         ,base: '${pageContext.request.contextPath}/res/mods/' //这里实际使用时，建议改成绝对路径
@@ -282,6 +279,7 @@
         }
         $(function () {
             getPageData();
+            $('#neu-hide-xs').addClass('layui-this');
         })
 
     });

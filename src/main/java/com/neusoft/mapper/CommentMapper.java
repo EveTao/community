@@ -33,6 +33,10 @@ public interface CommentMapper {
     List<Map<String,Object>> selectTop();
 
     List<Map<String,Object>> selectByUseridNew(User user);
+
     int updateIsRemindAll(User user);
 
+    int countByUseridNew(User user);
+
+    int updateIsNewRemind(User user);
 }

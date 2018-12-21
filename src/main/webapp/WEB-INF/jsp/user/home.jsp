@@ -173,13 +173,7 @@
 <script src="${pageContext.request.contextPath}/res/layui/layui.js"></script>
 <script>
     layui.cache.page = 'user';
-    layui.cache.user = {
-        username: '游客'
-        ,uid: -1
-        ,avatar: '${pageContext.request.contextPath}/res/images/avatar/00.jpg'
-        ,experience: 83
-        ,sex: '男'
-    };
+    <%@include file="../common/cache-user.jsp"%>
     layui.config({
         version: "3.0.0"
         ,base: '${pageContext.request.contextPath}/res/mods/'
@@ -188,8 +182,9 @@
     }).use(['fly', 'face'], function(){
         var $ = layui.$
             ,fly = layui.fly;
-        //如果你是采用模版自带的编辑器，你需要开启以下语句来解析。
 
+
+        //如果你是采用模版自带的编辑器，你需要开启以下语句来解析。
         $('.home-dacontent').each(function(){
             var othis = $(this), html = othis.html();
             othis.html(fly.content(html));
@@ -198,20 +193,5 @@
     });
 
 </script>
-<%--{{#  layui.each(d.datas, function(index, item){ }}
-<li>
-    {{item.nickname}}
-    <p>
-        <span>{{item.comment_time}}</span>
-        在<a href="${pageContext.request.contextPath}/jie/detail/{{item.topic_id}}" target="_blank">{{item.nickname}}</a>中回答：
-    </p>
-    <div class="home-dacontent">
-        {{item.nickname}}
-    </div>
-
-</li>
-{{#  }); }}--%>
-
-
 </body>
 </html>

@@ -77,32 +77,7 @@
 <%@include file="../common/header.jsp"%>
 
 <div class="layui-container fly-marginTop fly-user-main">
-    <ul class="layui-nav layui-nav-tree layui-inline" lay-filter="user">
-        <li class="layui-nav-item">
-            <a href="${pageContext.request.contextPath}/user/home/${userinfo.id}">
-                <i class="layui-icon">&#xe609;</i>
-                我的主页
-            </a>
-        </li>
-        <li class="layui-nav-item">
-            <a href="${pageContext.request.contextPath}/user/index">
-                <i class="layui-icon">&#xe612;</i>
-                用户中心
-            </a>
-        </li>
-        <li class="layui-nav-item layui-this">
-            <a href="${pageContext.request.contextPath}/user/set">
-                <i class="layui-icon">&#xe620;</i>
-                基本设置
-            </a>
-        </li>
-        <li class="layui-nav-item">
-            <a href="${pageContext.request.contextPath}/user/message">
-                <i class="layui-icon">&#xe611;</i>
-                我的消息
-            </a>
-        </li>
-    </ul>
+    <%@include file="../common/user-nav.jsp"%>
 
     <div class="site-tree-mobile layui-hide">
         <i class="layui-icon">&#xe602;</i>
@@ -261,19 +236,16 @@
 <script src="${pageContext.request.contextPath}/res/layui/layui.js"></script>
 <script>
     layui.cache.page = 'user';
-    layui.cache.user = {
-        username: '游客'
-        ,uid: -1
-        ,avatar: '${pageContext.request.contextPath}/res/images/avatar/00.jpg'
-        ,experience: 83
-        ,sex: '男'
-    };
+    <%@include file="../common/cache-user.jsp"%>
     layui.config({
         version: "2.0.0"
         ,base: '${pageContext.request.contextPath}/res/mods/'
     }).extend({
         fly: 'index'
-    }).use('fly');
+    }).use('fly',function () {
+        var $=layui.jquery;
+        $('.neu-nav-item').eq(2).addClass('layui-this').siblings().removeClass('layui-this');
+    });
 </script>
 
 </body>

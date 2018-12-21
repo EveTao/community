@@ -6,7 +6,7 @@
             <c:if test="${categoryid==0}">
                      class="layui-hide-xs layui-this"
             </c:if>
-            ><a href="/">首页</a></li>
+             id="neu-hide-xs"><a href="/">首页</a></li>
             <c:forEach items="${category}" var="cate">
                 <c:choose>
                     <c:when test="${cate.id==categoryid }">

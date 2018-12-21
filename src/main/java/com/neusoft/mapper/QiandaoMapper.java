@@ -14,4 +14,6 @@ public interface QiandaoMapper {
     int updateByPrimaryKeySelective(Qiandao record);
 
     int updateByPrimaryKey(Qiandao record);
+
+    int countToday(Integer userid);
 }

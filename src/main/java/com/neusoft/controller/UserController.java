@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.neusoft.domain.PageInfo;
 import com.neusoft.domain.Topic;
 import com.neusoft.domain.User;
+import com.neusoft.mapper.CollectMapper;
 import com.neusoft.mapper.CommentMapper;
 import com.neusoft.mapper.TopicMapper;
 import com.neusoft.mapper.UserMapper;
@@ -39,6 +40,8 @@ public class UserController {
     TopicMapper topicMapper;
     @Autowired
     CommentMapper commentMapper;
+    @Autowired
+    CollectMapper collectMapper;
 
     @RequestMapping("reg")
     public String reg(){
@@ -65,6 +68,15 @@ public class UserController {
         modelAndView.addObject("topics",topics);
         int count = topicMapper.countByUserId(user.getId());
         modelAndView.addObject("topicCount",count);
+        List<Map<String, Object>> collectTopic = collectMapper.findCollectTopic(user.getId());
+        for (Map<String,Object> map:collectTopic) {
+            Date date=(Date) map.get("collect_time");
+            String stringDate = StringDate.getStringDate(date);
+            map.put("collect_time",stringDate);
+        }
+        int i = collectMapper.countCollectTopic(user.getId());
+        modelAndView.addObject("collectCount",i);
+        modelAndView.addObject("collectTopic",collectTopic);
         return modelAndView;
     }
 //    进入我的消息页
@@ -83,9 +95,12 @@ public class UserController {
         modelAndView.addObject("commentList",commentList);
         return modelAndView;
     }
+//    进入基本设置页面
     @RequestMapping("set")
-    public String set(){
-        return "user/set";
+    public ModelAndView set(){
+        ModelAndView modelAndView=new ModelAndView();
+        modelAndView.setViewName("user/set");
+        return modelAndView;
     }
 //  登录
     @RequestMapping("dologin")
@@ -280,12 +295,12 @@ public class UserController {
     }
 //    从@跳转到用户主页
     @RequestMapping("jumphome/{username}")
-    public ModelAndView jumphome(@PathVariable String username)
+    public ModelAndView jumphome(@PathVariable String username,HttpServletRequest request)
     {
         ModelAndView modelAndView = new ModelAndView();
         User user = userMapper.selectByNickname(username);
         modelAndView.addObject("user",user);
-        modelAndView.setViewName("user/home/"+user.getId());
+        modelAndView.setViewName("redirect:"+request.getServletContext().getContextPath()+"../home/"+user.getId());
         return modelAndView;
     }
 //    检查用户昵称是否已存在

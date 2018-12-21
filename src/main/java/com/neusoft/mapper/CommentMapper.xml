@@ -169,16 +169,20 @@ limit 0,10
   LIMIT 0,12
   </select>
   <select id="selectByUseridNew" resultType="map" parameterType="User" >
-    select tab_topic.id,tab_topic.title,tab_comment.comment_time,tab_comment.user_id,tab_comment.id commentid,
-(SELECT nickname from tab_user where id=tab_comment.user_id) nickname,0 as msgtype
+    select * from (select tab_topic.id,tab_topic.title,tab_comment.comment_time,tab_comment.user_id,tab_comment.id commentid,
+(SELECT nickname from tab_user where id=tab_comment.user_id) nickname,'回答了您的求解' as msg1,'' as msg2
 from tab_topic JOIN tab_comment on tab_topic.id=tab_comment.topic_id
-where tab_topic.userid=#{id} and tab_comment.is_remind=0 and tab_comment.user_id !=#{id}
+where tab_topic.userid=#{id} and tab_comment.is_remind!=1
+and tab_comment.user_id !=#{id}
 UNION
     SELECT tab_topic.id,tab_topic.title,tab_comment.comment_time,tab_comment.user_id,tab_comment.id,tab_user.nickname
-,1 as msgtype FROM tab_comment
+,'在求解' as msg1,'回复了您' as msg2 FROM tab_comment
 JOIN tab_topic ON tab_comment.topic_id=tab_topic.id
 JOIN tab_user ON tab_comment.user_id=tab_user.id
-WHERE tab_comment.comment_content LIKE '%@${nickname} %' AND tab_comment.is_remind=0 and tab_comment.user_id!=#{id}
+WHERE tab_comment.comment_content LIKE '%@${nickname} %' AND tab_comment.is_remind!=1
+ and tab_comment.user_id!=#{id} ) as temp
+ORDER BY temp.comment_time DESC
+
   </select>
   <update id="updateIsRemindAll" parameterType="com.neusoft.domain.Comment" >
     update tab_comment
@@ -186,12 +190,39 @@ set is_remind=1
 WHERE tab_comment.id in (SELECT a.id from
 (select tab_comment.id from tab_comment
 where tab_comment.user_id in (select tab_comment.user_id from tab_topic JOIN tab_comment on tab_topic.id=tab_comment.topic_id
-where tab_topic.userid=#{id} and tab_comment.is_remind=0 and tab_comment.user_id !=#{id}
+where tab_topic.userid=#{id} and tab_comment.is_remind!=1 and tab_comment.user_id !=#{id}
 UNION
 SELECT tab_comment.user_id FROM tab_comment
 JOIN tab_topic ON tab_comment.topic_id=tab_topic.id
 JOIN tab_user ON tab_comment.user_id=tab_user.id
-WHERE tab_comment.comment_content LIKE '%@${nickname} %' AND tab_comment.is_remind=0 and tab_comment.user_id!=#{id})
+WHERE tab_comment.comment_content LIKE '%@${nickname} %' AND tab_comment.is_remind!=1 and tab_comment.user_id!=#{id})
 AND is_remind=0) a)
+  </update>
+  <select id="countByUseridNew" parameterType="User" resultType="int">
+    select count(temp.id) from (select tab_topic.id,tab_topic.title,tab_comment.comment_time,tab_comment.user_id,tab_comment.id commentid,
+(SELECT nickname from tab_user where id=tab_comment.user_id) nickname,'回答了您的求解' as msg1,'' as msg2
+from tab_topic JOIN tab_comment on tab_topic.id=tab_comment.topic_id
+where tab_topic.userid=#{id} and tab_comment.is_remind=0
+and tab_comment.user_id !=#{id}
+UNION
+    SELECT tab_topic.id,tab_topic.title,tab_comment.comment_time,tab_comment.user_id,tab_comment.id,tab_user.nickname
+,'在求解' as msg1,'回复了您' as msg2 FROM tab_comment
+JOIN tab_topic ON tab_comment.topic_id=tab_topic.id
+JOIN tab_user ON tab_comment.user_id=tab_user.id
+WHERE tab_comment.comment_content LIKE '%@${nickname} %' AND tab_comment.is_remind=0 and tab_comment.user_id!=#{id}) as temp
+  </select>
+  <update id="updateIsNewRemind" parameterType="User">
+    UPDATE tab_comment
+SET tab_comment.is_remind=2
+WHERE id in (select temp.commentid from (select tab_topic.id,tab_topic.title,tab_comment.comment_time,tab_comment.user_id,tab_comment.id commentid,
+(SELECT nickname from tab_user where id=tab_comment.user_id) nickname,'回答了您的求解' as msg1,'' as msg2
+from tab_topic JOIN tab_comment on tab_topic.id=tab_comment.topic_id
+where tab_topic.userid=#{id} and tab_comment.is_remind=0 and tab_comment.user_id !=#{id}
+UNION
+    SELECT tab_topic.id,tab_topic.title,tab_comment.comment_time,tab_comment.user_id,tab_comment.id,tab_user.nickname
+,'在求解' as msg1,'回复了您' as msg2 FROM tab_comment
+JOIN tab_topic ON tab_comment.topic_id=tab_topic.id
+JOIN tab_user ON tab_comment.user_id=tab_user.id
+WHERE tab_comment.comment_content LIKE '%@${nickname} %' AND tab_comment.is_remind=0 and tab_comment.user_id!=#{id}) as temp)
   </update>
 </mapper>

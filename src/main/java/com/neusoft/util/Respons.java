@@ -5,8 +5,15 @@ public class Respons {
     private String msg;
     private String action;
     private String url;
+    private Integer count;
 
+    public Integer getCount() {
+        return count;
+    }
 
+    public void setCount(Integer count) {
+        this.count = count;
+    }
 
     public String getUrl() {
         return url;

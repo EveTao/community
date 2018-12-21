@@ -17,33 +17,9 @@
 
 <%@include file="../common/header.jsp"%>
 
+
 <div class="layui-container fly-marginTop fly-user-main">
-    <ul class="layui-nav layui-nav-tree layui-inline" lay-filter="user">
-        <li class="layui-nav-item">
-            <a href="${pageContext.request.contextPath}/user/home/${userinfo.id}">
-                <i class="layui-icon">&#xe609;</i>
-                我的主页
-            </a>
-        </li>
-        <li class="layui-nav-item">
-            <a href="${pageContext.request.contextPath}/user/index">
-                <i class="layui-icon">&#xe612;</i>
-                用户中心
-            </a>
-        </li>
-        <li class="layui-nav-item">
-            <a href="${pageContext.request.contextPath}/user/set">
-                <i class="layui-icon">&#xe620;</i>
-                基本设置
-            </a>
-        </li>
-        <li class="layui-nav-item  layui-this">
-            <a href="${pageContext.request.contextPath}/user/message">
-                <i class="layui-icon">&#xe611;</i>
-                我的消息
-            </a>
-        </li>
-    </ul>
+    <%@include file="../common/user-nav.jsp"%>
 
     <div class="site-tree-mobile layui-hide">
         <i class="layui-icon">&#xe602;</i>
@@ -71,20 +47,11 @@
                                     <blockquote class="layui-elem-quote">
                                         <a href="${pageContext.request.contextPath}/user/home/${comment.user_id}" target="_blank">
                                             <cite>${comment.nickname}</cite>
+                                        </a>${comment.msg1}
+                                        <a target="_blank" href="${pageContext.request.contextPath}/jie/detail/${comment.id}">
+                                            <cite>${comment.title}</cite>
                                         </a>
-                                        <c:choose>
-                                            <c:when test="${comment.msgtype==0}">
-                                                回答了您的求解
-                                                <a target="_blank" href="${pageContext.request.contextPath}/jie/detail/${comment.id}">
-                                                    <cite>${comment.title}</cite>
-                                                </a>
-                                            </c:when>
-                                            <c:otherwise>
-                                                在求解<a target="_blank" href="${pageContext.request.contextPath}/jie/detail/${comment.id}">
-                                        <cite>${comment.title}</cite>中回复了你
-                                            </c:otherwise>
-                                        </c:choose>
-
+                                            ${comment.msg2}
                                     </blockquote>
                                     <p><span>${comment.comment_time}</span>
                                         <a href="javascript:;" class="layui-btn layui-btn-small layui-btn-danger fly-delete">删除</a>
@@ -121,33 +88,17 @@
 <script src="${pageContext.request.contextPath}/res/layui/layui.js"></script>
 <script>
     layui.cache.page = 'user';
-    layui.cache.user = {
-        username: '游客'
-        ,uid: -1
-        ,avatar: '${pageContext.request.contextPath}/res/images/avatar/00.jpg'
-        ,experience: 83
-        ,sex: '男'
-    };
+    <%@include file="../common/cache-user.jsp"%>
     layui.config({
         version: "3.0.0"
         ,base: '${pageContext.request.contextPath}/res/mods/'
     }).extend({
         fly: 'index'
-    }).use('fly');
+    }).use('fly',function () {
+        var $=layui.jquery;
+        $('.neu-nav-item').eq(3).addClass('layui-this').siblings().removeClass('layui-this');
+    });
 </script>
 
 </body>
 </html>
-
-
-
-} else {
-<ul class="mine-msg">
-     for(var i = 0; i < len; i++){
-    <li data-id="{{d.rows[i].id}}">
-        <blockquote class="layui-elem-quote">{{ d.rows[i].content}}</blockquote>\
-        <p><span>{{d.rows[i].time}}</span><a href="javascript:;" class="layui-btn layui-btn-sm layui-btn-danger fly-delete">删除</a></p>\
-    </li>
-     }
-</ul>
- }

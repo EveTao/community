@@ -2,10 +2,7 @@ package com.neusoft.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.neusoft.domain.*;
-import com.neusoft.mapper.CategoryMapper;
-import com.neusoft.mapper.CollectMapper;
-import com.neusoft.mapper.CommentMapper;
-import com.neusoft.mapper.TopicMapper;
+import com.neusoft.mapper.*;
 import com.neusoft.util.Respons;
 import com.neusoft.util.StringDate;
 import org.omg.CORBA.PUBLIC_MEMBER;
@@ -31,9 +28,11 @@ public class EnterController {
     CommentMapper commentMapper;
     @Autowired
     CollectMapper collectMapper;
+    @Autowired
+    QiandaoMapper qiandaoMapper;
 //    进入首页
     @RequestMapping("/")
-    public ModelAndView index()
+    public ModelAndView index(HttpSession session)
     {
 //        List<Map<String,Object>> mapList = topicMapper.getAllTopics();
         List<Map<String, Object>> allTopTopics = topicMapper.getAllTopTopics();
@@ -51,6 +50,11 @@ public class EnterController {
         }
         List<Map<String, Object>> commentMaps = commentMapper.selectTop();
         List<Map<String, Object>> allTopicsHot = topicMapper.getAllTopicsHot();
+        int countToday=0;
+        User user=(User) session.getAttribute("userinfo");
+        if(user!=null){
+            countToday= qiandaoMapper.countToday(user.getId());
+        }
         modelAndView.setViewName("index");
 //        modelAndView.addObject("topics",mapList);
         modelAndView.addObject("toptopics",allTopTopics);
@@ -58,6 +62,7 @@ public class EnterController {
         modelAndView.addObject("tops",commentMaps);
         modelAndView.addObject("typeid",0);
         modelAndView.addObject("TopicsHot",allTopicsHot);
+        modelAndView.addObject("countToday",countToday);
         return modelAndView;
     }
 }

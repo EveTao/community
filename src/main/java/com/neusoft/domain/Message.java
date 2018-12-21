@@ -7,9 +7,9 @@ public class Message {
 
     private Integer userId;
 
-    private Integer topicId;
+    private Integer objectId;
 
-    private String content;
+    private String msgType;
 
     private Date createTime;
 
@@ -29,20 +29,20 @@ public class Message {
         this.userId = userId;
     }
 
-    public Integer getTopicId() {
-        return topicId;
+    public Integer getObjectId() {
+        return objectId;
     }
 
-    public void setTopicId(Integer topicId) {
-        this.topicId = topicId;
+    public void setObjectId(Integer objectId) {
+        this.objectId = objectId;
     }
 
-    public String getContent() {
-        return content;
+    public String getMsgType() {
+        return msgType;
     }
 
-    public void setContent(String content) {
-        this.content = content == null ? null : content.trim();
+    public void setMsgType(String msgType) {
+        this.msgType = msgType == null ? null : msgType.trim();
     }
 
     public Date getCreateTime() {

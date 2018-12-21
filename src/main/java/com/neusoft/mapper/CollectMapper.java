@@ -2,6 +2,9 @@ package com.neusoft.mapper;
 
 import com.neusoft.domain.Collect;
 
+import java.util.List;
+import java.util.Map;
+
 public interface CollectMapper {
     int deleteByPrimaryKey(Integer id);
 
@@ -18,4 +21,8 @@ public interface CollectMapper {
     Collect findByUserTopic(Collect record);
 
     int deleteByUserTopic(Collect record);
+
+    List<Map<String,Object>>  findCollectTopic(Integer userid);
+
+    int countCollectTopic(Integer userid);
 }

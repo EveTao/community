@@ -79,4 +79,9 @@
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="countToday" parameterType="Integer" resultType="int">
+    SELECT count(*) FROM tab_user_qiandao
+    WHERE DATE_FORMAT(create_time, '%Y%m%d') = DATE_FORMAT(now(), '%Y%m%d')
+    and user_id=#{userid}
+  </select>
 </mapper>

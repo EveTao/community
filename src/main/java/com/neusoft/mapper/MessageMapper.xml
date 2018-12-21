@@ -4,12 +4,12 @@
   <resultMap id="BaseResultMap" type="com.neusoft.domain.Message" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="user_id" property="userId" jdbcType="INTEGER" />
-    <result column="topic_id" property="topicId" jdbcType="INTEGER" />
-    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="object_id" property="objectId" jdbcType="INTEGER" />
+    <result column="msg_type" property="msgType" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, user_id, topic_id, content, create_time
+    id, user_id, object_id, msg_type, create_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -22,10 +22,10 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.neusoft.domain.Message" >
-    insert into tab_user_message (id, user_id, topic_id, 
-      content, create_time)
-    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{topicId,jdbcType=INTEGER}, 
-      #{content,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
+    insert into tab_user_message (id, user_id, object_id, 
+      msg_type, create_time)
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{objectId,jdbcType=INTEGER}, 
+      #{msgType,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.neusoft.domain.Message" >
     insert into tab_user_message
@@ -36,11 +36,11 @@
       <if test="userId != null" >
         user_id,
       </if>
-      <if test="topicId != null" >
-        topic_id,
+      <if test="objectId != null" >
+        object_id,
       </if>
-      <if test="content != null" >
-        content,
+      <if test="msgType != null" >
+        msg_type,
       </if>
       <if test="createTime != null" >
         create_time,
@@ -53,11 +53,11 @@
       <if test="userId != null" >
         #{userId,jdbcType=INTEGER},
       </if>
-      <if test="topicId != null" >
-        #{topicId,jdbcType=INTEGER},
+      <if test="objectId != null" >
+        #{objectId,jdbcType=INTEGER},
       </if>
-      <if test="content != null" >
-        #{content,jdbcType=VARCHAR},
+      <if test="msgType != null" >
+        #{msgType,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
@@ -70,11 +70,11 @@
       <if test="userId != null" >
         user_id = #{userId,jdbcType=INTEGER},
       </if>
-      <if test="topicId != null" >
-        topic_id = #{topicId,jdbcType=INTEGER},
+      <if test="objectId != null" >
+        object_id = #{objectId,jdbcType=INTEGER},
       </if>
-      <if test="content != null" >
-        content = #{content,jdbcType=VARCHAR},
+      <if test="msgType != null" >
+        msg_type = #{msgType,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -85,8 +85,8 @@
   <update id="updateByPrimaryKey" parameterType="com.neusoft.domain.Message" >
     update tab_user_message
     set user_id = #{userId,jdbcType=INTEGER},
-      topic_id = #{topicId,jdbcType=INTEGER},
-      content = #{content,jdbcType=VARCHAR},
+      object_id = #{objectId,jdbcType=INTEGER},
+      msg_type = #{msgType,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>

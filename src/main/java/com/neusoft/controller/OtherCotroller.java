@@ -82,6 +82,7 @@ public class OtherCotroller {
         Collect collect=new Collect();
         collect.setTopicId(cid);
         collect.setUserId(user.getId());
+        collect.setCollectTime(new Date());
         int i ;
         if(type.equals("add")){
             i= collectMapper.insertSelective(collect);

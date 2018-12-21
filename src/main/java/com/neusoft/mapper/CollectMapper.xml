@@ -5,9 +5,10 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="user_id" property="userId" jdbcType="INTEGER" />
     <result column="topic_id" property="topicId" jdbcType="INTEGER" />
+    <result column="collect_time" property="collectTime" jdbcType="TIMESTAMP"/>
   </resultMap>
   <sql id="Base_Column_List" >
-    id, user_id, topic_id
+    id, user_id, topic_id,collect_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -20,9 +21,9 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.neusoft.domain.Collect" >
-    insert into tab_user_collect_topic (id, user_id, topic_id
+    insert into tab_user_collect_topic (id, user_id, topic_id,collect_time
       )
-    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{topicId,jdbcType=INTEGER}
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{topicId,jdbcType=INTEGER},#{collectTime,jdbcType=TIMESTAMP}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.neusoft.domain.Collect" >
@@ -37,6 +38,9 @@
       <if test="topicId != null" >
         topic_id,
       </if>
+      <if test="collectTime !=null">
+         collect_time,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -47,6 +51,9 @@
       </if>
       <if test="topicId != null" >
         #{topicId,jdbcType=INTEGER},
+      </if>
+      <if test="collectTime !=null">
+          #{collectTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -59,13 +66,17 @@
       <if test="topicId != null" >
         topic_id = #{topicId,jdbcType=INTEGER},
       </if>
+        <if test="collectTime !=null">
+            collect_time=#{collectTime,jdbcType=TIMESTAMP},
+        </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.neusoft.domain.Collect" >
     update tab_user_collect_topic
     set user_id = #{userId,jdbcType=INTEGER},
-      topic_id = #{topicId,jdbcType=INTEGER}
+      topic_id = #{topicId,jdbcType=INTEGER},
+      collect_time=#{collectTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="findByUserTopic" resultMap="BaseResultMap" parameterType="Collect" >
@@ -80,4 +91,14 @@
     where user_id = #{userId,jdbcType=INTEGER}
     and topic_id=#{topicId,jdbcType=INTEGER}
   </delete>
+  <select id="findCollectTopic" resultType="map" parameterType="java.lang.Integer">
+        select tab_topic.id,tab_topic.title,tab_user_collect_topic.collect_time from tab_user_collect_topic
+    JOIN tab_topic on tab_topic.id=tab_user_collect_topic.topic_id
+    WHERE tab_user_collect_topic.user_id=#{userid}
+  </select>
+  <select id="countCollectTopic" resultType="int" parameterType="java.lang.Integer">
+        select count(tab_topic.id) from tab_user_collect_topic
+JOIN tab_topic on tab_topic.id=tab_user_collect_topic.topic_id
+WHERE tab_user_collect_topic.user_id=#{userid}
+  </select>
 </mapper>

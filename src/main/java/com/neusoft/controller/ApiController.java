@@ -37,6 +37,7 @@ public class ApiController {
     @Autowired
     UserMapper userMapper;
 
+//    置顶帖子
     @RequestMapping("jie-set")
     public void setTopic(Integer id, Integer rank, String field, HttpServletResponse response, HttpServletRequest request) throws IOException {
         Topic topic=new Topic();
@@ -55,7 +56,7 @@ public class ApiController {
         }
         response.getWriter().println(JSON.toJSONString(res));
     }
-
+//  删除帖子
     @RequestMapping("jie-delete")
     public void deleteTopic(Topic topic, HttpServletResponse response) throws IOException {
         System.out.println(topic.getId());
@@ -99,6 +100,7 @@ public class ApiController {
         }
         response.getWriter().println(JSON.toJSONString(res));
     }
+//    点赞回复
     @RequestMapping("jieda-zan")
     public void zan(Integer id,Boolean ok, HttpSession session,HttpServletResponse response) throws IOException {
         User user=(User) session.getAttribute("userinfo");
@@ -119,6 +121,7 @@ public class ApiController {
         }
         response.getWriter().println(JSON.toJSONString(res));
     }
+//    评论上传图片
     @RequestMapping("upload")
     public void upload(@RequestParam MultipartFile file, HttpServletRequest request,HttpServletResponse response) throws IOException {
         Respons respons=new Respons();
