@@ -9,6 +9,7 @@ import com.neusoft.mapper.CommentMapper;
 import com.neusoft.mapper.TopicMapper;
 import com.neusoft.mapper.UserMapper;
 import com.neusoft.util.MD5Utils;
+import com.neusoft.util.MailUtil;
 import com.neusoft.util.Respons;
 import com.neusoft.util.StringDate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,10 +48,30 @@ public class UserController {
     public String reg(){
         return "user/reg";
     }
+//    进入邮箱激活页面
+    @RequestMapping("active")
+    public String active()
+    {
+        return "user/active";
+    }
 //    邮箱激活
     @RequestMapping("activemail/{code}")
-    public String activemail(){
-        return "user/reg";
+    public String activemail(@PathVariable String code,HttpSession session,HttpServletResponse response)
+    {
+        User user = userMapper.selectByActiveCode(code);
+        if(user != null)
+        {
+            user.setActiveState(1);
+            userMapper.updateByPrimaryKeySelective(user);
+//            response.sendRedirect("");
+            session.setAttribute("userinfo",user);
+            return "user/active_success";
+        }
+        else
+        {
+            return "user/active";
+        }
+
     }
 //    进入登录页面
     @RequestMapping("/login")
@@ -321,6 +342,20 @@ public class UserController {
             respons.setMsg("该用户名已存在，请重新输入");
         }
         response.getWriter().println(JSON.toJSONString(respons));
+    }
+//   重新发送邮件
+    @RequestMapping("activate")
+    public void activate(HttpSession session,HttpServletResponse response) throws Exception {
+        User userLogin = (User)session.getAttribute("userinfo");
+        UUID uuid = UUID.randomUUID();
+        String strUuid = uuid.toString().replace("-","");
+        userLogin.setActiveCode(strUuid);
+        userMapper.updateByPrimaryKeySelective(userLogin);
+        MailUtil.sendActiveMail(userLogin.getEmail(),strUuid);
+
+        Respons res = new Respons();
+        res.setStatus(0);
+        response.getWriter().println(JSON.toJSONString(res));
     }
 
 }

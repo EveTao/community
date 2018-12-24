@@ -31,33 +31,9 @@ public class User {
 
     private Integer isAdmin;
 
+    private String activeCode;
 
-    public Integer getIsAdmin() {
-        return isAdmin;
-    }
-
-    public void setIsAdmin(Integer isAdmin) {
-        this.isAdmin = isAdmin;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", nickname='" + nickname + '\'' +
-                ", passwd='" + passwd + '\'' +
-                ", city='" + city + '\'' +
-                ", sign='" + sign + '\'' +
-                ", sex=" + sex +
-                ", picPath='" + picPath + '\'' +
-                ", qq='" + qq + '\'' +
-                ", weibo='" + weibo + '\'' +
-                ", vipGrade=" + vipGrade +
-                ", kissNum=" + kissNum +
-                ", joinTime=" + joinTime +
-                '}';
-    }
+    private Integer activeState;
 
     public Integer getId() {
         return id;
@@ -161,5 +137,29 @@ public class User {
 
     public void setJoinTime(Date joinTime) {
         this.joinTime = joinTime;
+    }
+
+    public Integer getIsAdmin() {
+        return isAdmin;
+    }
+
+    public void setIsAdmin(Integer isAdmin) {
+        this.isAdmin = isAdmin;
+    }
+
+    public String getActiveCode() {
+        return activeCode;
+    }
+
+    public void setActiveCode(String activeCode) {
+        this.activeCode = activeCode == null ? null : activeCode.trim();
+    }
+
+    public Integer getActiveState() {
+        return activeState;
+    }
+
+    public void setActiveState(Integer activeState) {
+        this.activeState = activeState;
     }
 }

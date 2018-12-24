@@ -21,4 +21,5 @@ public interface UserMapper {
 
     User selectByNickname(String nickname);
 
+    User selectByActiveCode(String activeCode);
 }
