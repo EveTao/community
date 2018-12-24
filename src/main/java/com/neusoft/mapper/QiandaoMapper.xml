@@ -84,4 +84,29 @@
     WHERE DATE_FORMAT(create_time, '%Y%m%d') = DATE_FORMAT(now(), '%Y%m%d')
     and user_id=#{userid}
   </select>
+  <select id="selectByUserId" parameterType="int" resultMap="BaseResultMap">
+     select * from tab_user_qiandao where user_id = #{value}
+  </select>
+  <!--最新-->
+  <select id="selectNew" resultType="map">
+      select tab_user.id as uid,tab_user.pic_path as picPath,tab_user.nickname,
+tab_user_qiandao.create_time as time,tab_user_qiandao.total as days
+from tab_user_qiandao JOIN tab_user on tab_user_qiandao.user_id=tab_user.id
+ORDER BY tab_user_qiandao.create_time DESC limit 0,20
+  </select>
+  <!--最快-->
+  <select id="selectFast" resultType="map">
+      select tab_user.id as uid,tab_user.pic_path as picPath,tab_user.nickname,
+tab_user_qiandao.create_time as time,tab_user_qiandao.total as days
+from tab_user_qiandao JOIN tab_user on tab_user_qiandao.user_id=tab_user.id
+WHERE DATE_FORMAT(tab_user_qiandao.create_time, '%Y%m%d') = DATE_FORMAT(now(), '%Y%m%d')
+ORDER BY tab_user_qiandao.create_time asc limit 0,20
+  </select>
+  <!--总榜-->
+  <select id="selectTop" resultType="map">
+      select tab_user.id as uid,tab_user.pic_path as picPath,tab_user.nickname,
+tab_user_qiandao.create_time as time,tab_user_qiandao.total as days
+from tab_user_qiandao JOIN tab_user on tab_user_qiandao.user_id=tab_user.id
+ORDER BY tab_user_qiandao.total DESC limit 0,20
+  </select>
 </mapper>

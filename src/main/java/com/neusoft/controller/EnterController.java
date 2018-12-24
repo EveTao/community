@@ -3,6 +3,7 @@ package com.neusoft.controller;
 import com.alibaba.fastjson.JSON;
 import com.neusoft.domain.*;
 import com.neusoft.mapper.*;
+import com.neusoft.util.GetKissnum;
 import com.neusoft.util.Respons;
 import com.neusoft.util.StringDate;
 import org.omg.CORBA.PUBLIC_MEMBER;
@@ -52,9 +53,20 @@ public class EnterController {
         List<Map<String, Object>> allTopicsHot = topicMapper.getAllTopicsHot();
         int countToday=0;
         User user=(User) session.getAttribute("userinfo");
+        int qiandaoKiss=5;
+        int qiandaoDay=0;
         if(user!=null){
             countToday= qiandaoMapper.countToday(user.getId());
+//            Qiandao qiandao = qiandaoMapper.selectCurrent(user.getId());
+            Qiandao qiandao = qiandaoMapper.selectByUserId(user.getId());
+            if(qiandao!=null){
+                qiandaoDay=qiandao.getTotal();
+                GetKissnum getKissnum=new GetKissnum();
+                qiandaoKiss=getKissnum.getKisssnum(qiandaoDay);
+            }
         }
+        System.out.println("qiandaoDay:"+qiandaoDay);
+        System.out.println("qiandaoKiss:"+qiandaoKiss);
         modelAndView.setViewName("index");
 //        modelAndView.addObject("topics",mapList);
         modelAndView.addObject("toptopics",allTopTopics);
@@ -62,6 +74,8 @@ public class EnterController {
         modelAndView.addObject("tops",commentMaps);
         modelAndView.addObject("typeid",0);
         modelAndView.addObject("TopicsHot",allTopicsHot);
+        modelAndView.addObject("qiandaoKiss",qiandaoKiss);
+        modelAndView.addObject("qiandaoDay",qiandaoDay);
         modelAndView.addObject("countToday",countToday);
         return modelAndView;
     }

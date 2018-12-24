@@ -131,17 +131,21 @@
                     <a href="javascript:;" class="fly-link" id="LAY_signinHelp">说明</a>
                     <i class="fly-mid"></i>
                     <a href="javascript:;" class="fly-link" id="LAY_signinTop">活跃榜<span class="layui-badge-dot"></span></a>
-                    <span class="fly-signin-days">已连续签到<cite>16</cite>天</span>
+                    <c:if test="${!empty userinfo}">
+                        <span class="fly-signin-days">已连续签到<cite>${qiandaoDay}</cite>天</span>
+                    </c:if>
                 </div>
                 <div class="fly-panel-main fly-signin-main">
                     <c:choose>
                         <c:when test="${countToday==0}">
                             <button class="layui-btn layui-btn-danger" id="LAY_signin">今日签到</button>
-                            <span>可获得<cite>5</cite>飞吻</span>
+                            <c:if test="${!empty userinfo}">
+                                <span>可获得<cite>${qiandaoKiss}</cite>飞吻</span>
+                            </c:if>
                         </c:when>
                         <c:otherwise>
                             <button class="layui-btn layui-btn-disabled">今日已签到</button>
-                            <span>获得了<cite>20</cite>飞吻</span>
+                            <span>获得了<cite>${qiandaoKiss}</cite>飞吻</span>
                         </c:otherwise>
                     </c:choose>
                 </div>
@@ -284,16 +288,12 @@
 
     });
 </script>
-
-<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_30088308'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "w.cnzz.com/c.php%3Fid%3D30088308' type='text/javascript'%3E%3C/script%3E"));</script>
-
-
 <script id="demo" type="text/html">
     {{#  layui.each(d.datas, function(index, topic){ }}
     <li>
         <a href="${pageContext.request.contextPath}/user/home/{{topic.userid}}" class="fly-avatar">
             {{#  if(topic.pic_path!=''){ }}
-             <img src="${pageContext.request.contextPath}/res/uploadImg/{{topic.pic_path}}" alt="{{topic.userid}}">
+            <img src="${pageContext.request.contextPath}/res/uploadImg/{{topic.pic_path}}" alt="{{topic.userid}}">
             {{#  } else { }}
             <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg">
             {{#  } }}
@@ -323,5 +323,12 @@
     </li>
     {{#  }); }}
 </script>
+
+<%--<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");--%>
+<%--document.write(unescape("%3Cspan id='cnzz_stat_icon_30088308'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "w.cnzz.com/c.php%3Fid%3D30088308' type='text/javascript'%3E%3C/script%3E"));--%>
+<%--</script>--%>
+
+
+
 </body>
 </html>

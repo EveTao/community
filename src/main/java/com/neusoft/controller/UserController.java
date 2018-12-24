@@ -47,6 +47,11 @@ public class UserController {
     public String reg(){
         return "user/reg";
     }
+//    邮箱激活
+    @RequestMapping("activemail/{code}")
+    public String activemail(){
+        return "user/reg";
+    }
 //    进入登录页面
     @RequestMapping("/login")
     public String login(HttpServletRequest request){

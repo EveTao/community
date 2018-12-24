@@ -1,11 +1,32 @@
 package com.neusoft.util;
 
+import java.util.List;
+import java.util.Map;
+
 public class Respons {
     private Integer status;
     private String msg;
     private String action;
     private String url;
     private Integer count;
+    private Data data;
+    private List<List<Map<String ,Object>>> dataList;
+
+    public Data getData() {
+        return data;
+    }
+
+    public void setData(Data data) {
+        this.data = data;
+    }
+
+    public List<List<Map<String, Object>>> getDataList() {
+        return dataList;
+    }
+
+    public void setDataList(List<List<Map<String, Object>>> dataList) {
+        this.dataList = dataList;
+    }
 
     public Integer getCount() {
         return count;
